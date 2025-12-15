@@ -12,7 +12,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+div{
+  text-align: center;
+  padding: 1em;
+  max-width: 800px;
+  margin: auto;
+}
 a {
   font-weight: 500;
   color: #646cff;
