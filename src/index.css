@@ -1,73 +1,282 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    /* Typography / rendering */
+    --font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: var(--font-family);
+    color-scheme: light dark;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* Theme variables (defaults to dark-friendly values) */
+    --bg: #0f1215;
+    --surface: #1d1f25;
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.7);
+    --border: rgba(255, 255, 255, 0.12);
+    --primary: #4da3ff;
+    --accent: #21f;
+    --header-bg: transparent;
+    --header-border: var(--border);
+    --hover-bg: rgba(255, 255, 255, 1);
+    --shadow: 0 2px 8px rgba(2, 6, 23, 0.6);
+    --image-svg: 1;
 }
-div{
-  text-align: center;
-  padding: 1em;
-  max-width: 800px;
-  margin: auto;
+
+/* Light theme overrides */
+:root[data-theme="light"] {
+    --bg: #ffffff;
+    --surface: #f6f7f9;
+    --text: #111827;
+    --muted: rgba(17, 24, 39, 0.7);
+    --border: rgba(17, 24, 39, 0.08);
+    --primary: #0b5fff;
+    --accent: #0b69ff;
+    --header-bg: transparent;
+    --header-border: rgba(17, 24, 39, 0.08);
+    --hover-bg: rgba(2, 6, 23, 0.04);
+    --shadow: 0 2px 8px rgba(2, 6, 23, 0.06);
+    --image-svg: 0;
+}
+
+/* Dark theme explicit override (in case data-theme uses 'dark') */
+:root[data-theme="dark"] {
+    --bg: #0f1215;
+    --surface: #1a1f25;
+    --text: rgba(255, 255, 255, 0.92);
+    --muted: rgba(255, 255, 255, 0.7);
+    --border: rgba(255, 255, 255, 0.12);
+    --primary: #4da3ff;
+    --accent: #21f;
+    --header-bg: transparent;
+    --header-border: var(--border);
+    --hover-bg: rgba(255, 255, 255, 0.1);
+    --shadow: 0 2px 8px rgba(2, 6, 23, 0.6);
+    --image-svg: 1;
+}
+
+/* Base layout */
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+
+    /* Use theme variables */
+    color: var(--text);
+    background-color: var(--bg);
+}
+.btn {
+    background-color: var(--primary);
+    color: var(--text);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn:hover {
+    background-color: var(--accent);
+}
+/* App container */
+.app-body {
+    width: 100svw;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg);
+    color: var(--text);
+}
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background-color: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--text);
+}
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--text) var(--bg);
+    overflow-x: hidden;
+}
+
+/* Footer */
+footer {
+    background-color: transparent;
+    color: var(--muted);
+    padding: 1rem;
+    text-align: center;
 }
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+/* Generic surface element */
+.surface {
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: 6px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Header defaults — these are generic selectors to be picked up even if modules use same local class names */
+.header {
+    height: 75px;
+    background: var(--header-bg);
+    border-bottom: 2px solid var(--header-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    color: var(--text);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+/* Small utilities related to header */
+.left_section {
+    width: fit-content;
+    display: flex;
+    align-items: center;
 }
-button:hover {
-  border-color: #646cff;
+.right_section {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.hamburger {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    /* invert filter can conflict with theme; prefer using CSS variable-based color for SVG via currentColor */
+    filter: none;
+    color: var(--text);
+    padding: 8px;
+    border-radius: 5px;
+    transition: ease-in-out 200ms;
+    border: 0.1px solid transparent;
+}
+.hamburger:hover {
+    background-color: var(--hover-bg);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Sidebar styles (mirrors module CSS but uses variables) */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: var(--surface);
+    position: fixed;
+    left: -250px;
+    top: 0;
+    border-right: 1px solid var(--border);
+    transition: ease-in-out 200ms;
+    animation: slideIn 200ms ease-in-out forwards;
+    color: var(--text);
+}
+.sidebar_hide {
+    animation: slideOut 200ms ease-in-out forwards;
+}
+.sidebar_title {
+    padding-left: 10px;
+    font-size: 20px;
+    color: var(--text);
+}
+.sidebar_list {
+    margin-top: 50px;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.sidebar_item {
+    text-decoration: none;
+    color: var(--text);
+    margin-top: 5px;
+    padding: 5px;
+    padding-left: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: ease-in-out 200ms;
+    border-radius: 5px 0 0 5px;
+}
+.sidebar_item:hover {
+    background-color: var(--hover-bg);
+}
+.sidebar_selected {
+    background-color: var(--hover-bg);
+    border-left: 5px solid var(--accent);
+}
+
+/* Close button for sidebar */
+.close_button {
+    width: 34px;
+    height: 34px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    border-radius: 5px;
+    transition: ease-in-out 200ms;
+}
+.close_button_icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    line-height: 22px;
+    text-align: center;
+    filter: none;
+    color: var(--text);
+}
+.close_button:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Page container / dashboard */
+.container {
+    height: fit-content;
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+}
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    align-self: flex-start;
+    color: var(--text);
+}
+
+/* Keyframes (unchanged) */
+@keyframes slideIn {
+    from {
+        left: -250px;
+    }
+    to {
+        left: 0;
+    }
+}
+@keyframes slideOut {
+    from {
+        left: 0;
+    }
+    to {
+        left: -250px;
+    }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
 }

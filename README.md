@@ -43,19 +43,21 @@ Features and structure may change.
 
 ---
 
-## 📌 Roadmap
+## 📌 Roadmap 2025/2026
 
 - [ ] Core dashboard
-- [ ] Snippet manager
-- [ ] Markdown editor + PDF export
-- [ ] Project TODOs
+- [ ] MPV
+- [ ] Complete snippet manager
+- [ ] Complete Markdown editor + PDF export
+- [ ] Complete Project TODOs
 - [ ] Desktop build (Tauri)
+- [ ] v 0.1.0
 
 ---
 
 ## 📄 License
 
-`MIT`
+[MIT](./LICENSE)
 
 ## Author
 - [Teczak-dev](https://github.com/Teczak-dev)

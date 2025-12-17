@@ -1,13 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { BrowserRouter } from 'react-router-dom'
-import AppRoutes from './routes'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes";
+import { ThemeProvider } from "./context/ThemeProvider";
+import { ProjectsProvider } from "./context/ProjectsProvider";
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <AppRoutes/>
+      <ThemeProvider>
+        <ProjectsProvider>
+          <AppRoutes />
+        </ProjectsProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
-)
+);
