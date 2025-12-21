@@ -1,0 +1,41 @@
+.profileClose {
+    width: 100svw;
+    height: 100svh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+.profileMenu {
+    width: 100px;
+    height: min-content;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.items {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 5px;
+    border: none;
+    border-bottom: 2px solid var(--border);
+    background-color: transparent;
+    transition: ease-in-out 200ms;
+    color: var(--text);
+}
+.items:hover {
+    background-color: var(--hover-bg);
+    cursor: pointer;
+}

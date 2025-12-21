@@ -1,8 +1,11 @@
 import styles from "../styles/Pages/DashboardPage.module.css";
-import { TestData } from "../../data/TestData";
 import Card from "../components/modules/Card/Card";
+import { useProjects } from "../shared/hooks/useProjects";
+import { useNavigate } from "react-router-dom";
 
 const DashboardPage = () => {
+  const { projects } = useProjects();
+  const navigate = useNavigate();
   return (
     <div className={styles.container}>
       <div className={styles.title}>
@@ -10,7 +13,7 @@ const DashboardPage = () => {
         <button
           className={styles.btn}
           onClick={() => {
-            console.log("Button clicked");
+            navigate("/add-project");
           }}
         >
           Add project
@@ -18,33 +21,25 @@ const DashboardPage = () => {
       </div>
       <p className={styles.description}>Welcome to your dashboard!</p>
       <div className={styles.content}>
-        {TestData.map((data, index) => (
-          <Card
-            key={index}
-            id={data.id}
-            title={data.title}
-            status={data.status}
-            type="project"
-          />
-        ))}
-        {TestData.map((data, index) => (
-          <Card
-            key={index}
-            id={data.id}
-            title={data.title}
-            status={data.status}
-            type="project"
-          />
-        ))}
-        {TestData.map((data, index) => (
-          <Card
-            key={index}
-            id={data.id}
-            title={data.title}
-            status={data.status}
-            type="project"
-          />
-        ))}
+        {projects.length > 0 ? (
+          <>
+            {projects.map((data, index) => (
+              <Card
+                key={index}
+                id={data.id}
+                title={data.title}
+                status={data.status}
+                type="project"
+              />
+            ))}{" "}
+          </>
+        ) : (
+          <p className={styles.description}>
+            No projects found.
+            <br />
+            Start by clicking the "Add project" button.
+          </p>
+        )}
       </div>
     </div>
   );

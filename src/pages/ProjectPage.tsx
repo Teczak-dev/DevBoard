@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styles from "../styles/Pages/ProjectPage.module.css";
 import { useProjects } from "../shared/hooks/useProjects";
 import type { Project } from "../shared/types/project";
-import { height } from "@mui/system";
+import ProjectInfo from "../components/modules/ProjectInfo/ProjectInfo";
+import EditProjectInfo from "../components/modules/EditProjectInfo/EditProjectInfo";
 
 const ProjectPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const { projects, updateProject } = useProjects();
+  const [isEditing, setIsEditing] = useState(false);
   if (!id) {
     return (
       <div className={styles.container}>
@@ -48,18 +50,36 @@ const ProjectPage: React.FC = () => {
     updateProject(item.id, updated);
   };
 
+  const editProject = () => {
+    setIsEditing(!isEditing);
+  };
+
   // Render project details
   return (
     <div className={styles.container}>
       <Link className={styles.backLink} to="/">
         Go back to dashboard
       </Link>
-      <button className={styles.button} onClick={changeStatus}>
-        Change Status
-      </button>
-      <h1>{item.title}</h1>
-      <p>Project id: {item.id}</p>
-      <p>Status: {item.status}</p>
+      <div className={styles.rightButtons}>
+        <button className={styles.button} onClick={editProject}>
+          {isEditing ? "Cancel" : "Edit Project"}
+        </button>
+        <button
+          className={`${styles.button} ${item.status === "active" ? styles.active : styles.inactive}`}
+          onClick={changeStatus}
+        >
+          {item.status === "active" ? "active" : "inactive"}
+        </button>
+      </div>
+      {isEditing ? (
+        <EditProjectInfo item={item} closeEdit={editProject} />
+      ) : (
+        <ProjectInfo item={item} />
+      )}
+      {/*<h1 style={{ marginBottom: "5px", maxWidth: "50%", textWrap: "wrap" }}>
+        {item.title}
+      </h1>
+      <p style={{ marginTop: "5px" }}>Project id: {item.id}</p>
       <p
         style={{
           maxWidth: "300px",
@@ -69,8 +89,11 @@ const ProjectPage: React.FC = () => {
         }}
       >
         Description:
-        <br /> {item.description}
-      </p>
+        <br />{" "}
+        {item.description?.length || "".length > 0
+          ? item.description
+          : "No description provided"}
+      </p>*/}
       <div className={styles.details}>
         <div className={styles.firstRow}>
           <div className={styles.tasks}>

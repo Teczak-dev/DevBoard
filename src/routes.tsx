@@ -6,12 +6,14 @@ import SnippetsPage from "./pages/SnippetsPage";
 import MarkdownPage from "./pages/MarkdownPage";
 import TODOPage from "./pages/TODOPage";
 import ProjectPage from "./pages/ProjectPage";
+import AddProject from "./pages/AddProject";
 
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<AppLayout />} errorElement={<div>Error</div>}>
         <Route index element={<DashboardPage />} />
+        <Route path="add-project" element={<AddProject />} />
         <Route path="/project/:id" element={<ProjectPage />} />
         <Route path="/snippets" element={<SnippetsPage />} />
         <Route path="/markdown-editor" element={<MarkdownPage />} />

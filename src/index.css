@@ -1,3 +1,20 @@
+/* Global stylesheet and MUI overrides
+ *
+ * Purpose:
+ * - Provide application-wide CSS variables for theming (light/dark/system).
+ * - Contain layout, utility and component base styles.
+ * - Provide defensive/global MUI overrides so MUI components follow CSS variables.
+ *
+ * Notes:
+ * - Theme variables are defined under :root and overridden by :root[data-theme="light"/"dark"].
+ * - ThemeProvider in JS sets `document.documentElement.dataset.theme = 'light' | 'dark'`
+ *   so CSS reacts via `:root[data-theme="..."]`.
+ * - Keep the CSS variables here in sync with ThemeProvider's expectations.
+ */
+
+/* =========================
+   Global variables & base
+   ========================= */
 :root {
     /* Typography / rendering */
     --font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -15,12 +32,17 @@
     --muted: rgba(255, 255, 255, 0.7);
     --border: rgba(255, 255, 255, 0.12);
     --primary: #4da3ff;
+    --primary-soft: rgba(77, 163, 255, 0.08);
     --accent: #21f;
     --header-bg: transparent;
     --header-border: var(--border);
-    --hover-bg: rgba(255, 255, 255, 1);
+    --hover-bg: rgba(255, 255, 255, 0.04);
     --shadow: 0 2px 8px rgba(2, 6, 23, 0.6);
     --image-svg: 1;
+    --disabled-border: rgba(255, 255, 255, 0.06);
+    --danger: #a11;
+    --danger-hover: #dd1f1f;
+    --danger-active: #dd1f1f;
 }
 
 /* Light theme overrides */
@@ -30,13 +52,18 @@
     --text: #111827;
     --muted: rgba(17, 24, 39, 0.7);
     --border: rgba(17, 24, 39, 0.08);
-    --primary: #0b5fff;
-    --accent: #0b69ff;
+    --primary: #5d498f;
+    --primary-soft: rgba(103, 78, 167, 0.08);
+    --accent: #674ea7;
     --header-bg: transparent;
     --header-border: rgba(17, 24, 39, 0.08);
     --hover-bg: rgba(2, 6, 23, 0.04);
     --shadow: 0 2px 8px rgba(2, 6, 23, 0.06);
     --image-svg: 0;
+    --disabled-border: rgba(17, 24, 39, 0.06);
+    --danger: #a11;
+    --danger-hover: #dd1f1f;
+    --danger-active: #dd1f1f;
 }
 
 /* Dark theme explicit override (in case data-theme uses 'dark') */
@@ -46,16 +73,23 @@
     --text: rgba(255, 255, 255, 0.92);
     --muted: rgba(255, 255, 255, 0.7);
     --border: rgba(255, 255, 255, 0.12);
-    --primary: #4da3ff;
+    --primary: #21a;
+    --primary-soft: rgba(33, 34, 255, 0.08);
     --accent: #21f;
     --header-bg: transparent;
     --header-border: var(--border);
-    --hover-bg: rgba(255, 255, 255, 0.1);
+    --hover-bg: rgba(255, 255, 255, 0.08);
     --shadow: 0 2px 8px rgba(2, 6, 23, 0.6);
     --image-svg: 1;
+    --disabled-border: rgba(255, 255, 255, 0.06);
+    --danger: #a11;
+    --danger-hover: #dd1f1f;
+    --danger-active: #dd1f1f;
 }
 
-/* Base layout */
+/* =========================
+   Base layout & utilities
+   ========================= */
 body {
     margin: 0;
     display: flex;
@@ -68,18 +102,7 @@ body {
     color: var(--text);
     background-color: var(--bg);
 }
-.btn {
-    background-color: var(--primary);
-    color: var(--text);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-}
-.btn:hover {
-    background-color: var(--accent);
-}
-/* App container */
+
 .app-body {
     width: 100svw;
     min-height: 100svh;
@@ -88,6 +111,23 @@ body {
     background-color: var(--bg);
     color: var(--text);
 }
+
+/* Simple button utility */
+.btn {
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn:hover {
+    background-color: var(--accent);
+}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -110,166 +150,12 @@ footer {
     padding: 1rem;
     text-align: center;
 }
+
+/* Links */
 a {
     color: var(--text);
     text-decoration: none;
     transition: color 0.3s ease;
-}
-/* Generic surface element */
-.surface {
-    background-color: var(--surface);
-    color: var(--text);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    border-radius: 6px;
-}
-
-/* Header defaults — these are generic selectors to be picked up even if modules use same local class names */
-.header {
-    height: 75px;
-    background: var(--header-bg);
-    border-bottom: 2px solid var(--header-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    color: var(--text);
-}
-
-/* Small utilities related to header */
-.left_section {
-    width: fit-content;
-    display: flex;
-    align-items: center;
-}
-.right_section {
-    width: fit-content;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.hamburger {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    /* invert filter can conflict with theme; prefer using CSS variable-based color for SVG via currentColor */
-    filter: none;
-    color: var(--text);
-    padding: 8px;
-    border-radius: 5px;
-    transition: ease-in-out 200ms;
-    border: 0.1px solid transparent;
-}
-.hamburger:hover {
-    background-color: var(--hover-bg);
-}
-
-/* Sidebar styles (mirrors module CSS but uses variables) */
-.sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: var(--surface);
-    position: fixed;
-    left: -250px;
-    top: 0;
-    border-right: 1px solid var(--border);
-    transition: ease-in-out 200ms;
-    animation: slideIn 200ms ease-in-out forwards;
-    color: var(--text);
-}
-.sidebar_hide {
-    animation: slideOut 200ms ease-in-out forwards;
-}
-.sidebar_title {
-    padding-left: 10px;
-    font-size: 20px;
-    color: var(--text);
-}
-.sidebar_list {
-    margin-top: 50px;
-    padding-left: 10px;
-    display: flex;
-    flex-direction: column;
-}
-.sidebar_item {
-    text-decoration: none;
-    color: var(--text);
-    margin-top: 5px;
-    padding: 5px;
-    padding-left: 10px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: ease-in-out 200ms;
-    border-radius: 5px 0 0 5px;
-}
-.sidebar_item:hover {
-    background-color: var(--hover-bg);
-}
-.sidebar_selected {
-    background-color: var(--hover-bg);
-    border-left: 5px solid var(--accent);
-}
-
-/* Close button for sidebar */
-.close_button {
-    width: 34px;
-    height: 34px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--text);
-    border-radius: 5px;
-    transition: ease-in-out 200ms;
-}
-.close_button_icon {
-    display: block;
-    width: 100%;
-    height: 100%;
-    line-height: 22px;
-    text-align: center;
-    filter: none;
-    color: var(--text);
-}
-.close_button:hover {
-    background-color: var(--hover-bg);
-}
-
-/* Page container / dashboard */
-.container {
-    height: fit-content;
-    padding: 20px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--text);
-}
-.title {
-    font-size: 2rem;
-    font-weight: bold;
-    align-self: flex-start;
-    color: var(--text);
-}
-
-/* Keyframes (unchanged) */
-@keyframes slideIn {
-    from {
-        left: -250px;
-    }
-    to {
-        left: 0;
-    }
-}
-@keyframes slideOut {
-    from {
-        left: 0;
-    }
-    to {
-        left: -250px;
-    }
 }
 
 /* Respect reduced motion preference */
@@ -280,3 +166,144 @@ a {
         transition-duration: 0.001ms !important;
     }
 }
+
+/* =========================
+   MUI global overrides
+   =========================
+   These selectors target MUI classes to ensure components follow CSS variables.
+   The :global(...) wrapper is included to support CSS Modules setups that expect it.
+*/
+
+/* Root outlined input */
+.MuiOutlinedInput-root {
+    background: transparent;
+    color: var(--text);
+    border-radius: 8px;
+}
+
+/* Notched outline default border color */
+.MuiOutlinedInput-notchedOutline {
+    border-color: var(--border);
+}
+
+/* Focused outline: primary + soft ring */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--primary);
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.06),
+        0 0 0 6px var(--primary-soft);
+}
+
+/* Input text and placeholder (enforced across themes and MUI internals) */
+.MuiInputBase-input,
+.MuiOutlinedInput-input {
+    color: var(--text) !important;
+    font-size: 0.97rem;
+    padding: 10px 12px;
+}
+
+/* Placeholder color */
+.MuiInputBase-input::placeholder,
+.MuiOutlinedInput-input::placeholder {
+    color: var(--muted) !important;
+    opacity: 0.9;
+}
+
+/* Dark-mode reinforcement:
+   Some MUI internals or third-party CSS may inject more specific rules.
+   These selectors ensure dark theme inputs always use the CSS variables.
+*/
+:root[data-theme="dark"] .MuiInputBase-input,
+:root[data-theme="dark"] .MuiOutlinedInput-input {
+    color: var(--text) !important;
+}
+:root[data-theme="dark"] .MuiInputBase-input::placeholder,
+:root[data-theme="dark"] .MuiOutlinedInput-input::placeholder {
+    color: var(--muted) !important;
+}
+
+/* Helper / helper error text */
+.MuiFormHelperText-root {
+    color: var(--muted) !important;
+    font-size: 0.82rem;
+    margin-left: 4px;
+    margin-top: 6px;
+}
+
+/* Error helper text (global) - ensure helper text shows red when there is an error */
+.MuiFormHelperText-root.Mui-error,
+.MuiFormControl-root.Mui-error .MuiFormHelperText-root {
+    color: #ff6b6b !important;
+}
+
+/* When a form control / input is in error state, ensure the outlined input's
+   border and the helper text are visibly red across themes and specificity. */
+.MuiFormControl-root.Mui-error .MuiOutlinedInput-notchedOutline,
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: #ff6b6b !important;
+    stroke: #ff6b6b !important;
+    /* stronger red ring to emphasize error */
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.12) !important;
+}
+
+/* Dark-mode specific overrides:
+   Some dark-mode rules may run later or have similar specificity. Provide
+   dark-theme selectors that explicitly target the error state so error
+   styling (helper text + outline) remains red in dark mode. */
+:root[data-theme="dark"] .MuiFormHelperText-root.Mui-error {
+    color: #ff6b6b !important;
+}
+:root[data-theme="dark"]
+    .MuiFormControl-root.Mui-error
+    .MuiOutlinedInput-notchedOutline,
+:root[data-theme="dark"]
+    .MuiOutlinedInput-root.Mui-error
+    .MuiOutlinedInput-notchedOutline {
+    border-color: #ff6b6b !important;
+    stroke: #ff6b6b !important;
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.12) !important;
+}
+
+/* Disabled outlined input */
+.MuiOutlinedInput-root.Mui-disabled {
+    background: rgba(0, 0, 0, 0.02);
+    color: var(--muted);
+}
+.MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline {
+    border-color: var(--disabled-border);
+    stroke: var(--disabled-border);
+}
+
+/* Ensure outlines in dark mode use the theme border (adds specificity for some injected styles) */
+:root[data-theme="dark"] .MuiFormControl-root .MuiOutlinedInput-notchedOutline,
+:root[data-theme="dark"]
+    .MuiOutlinedInput-root
+    .MuiOutlinedInput-notchedOutline {
+    border-color: var(--border);
+}
+
+/* Ensure outlines in light mode also use theme border */
+:root[data-theme="light"] .MuiFormControl-root .MuiOutlinedInput-notchedOutline,
+:root[data-theme="light"]
+    .MuiOutlinedInput-root
+    .MuiOutlinedInput-notchedOutline {
+    border-color: var(--border);
+}
+
+/* Additional common MUI tweaks */
+.MuiSelect-icon {
+    color: var(--muted);
+}
+.MuiInputLabel-root {
+    color: var(--muted);
+}
+.MuiFormLabel-root.Mui-focused {
+    color: var(--primary);
+}
+
+/* Defensive fallback notes:
+   - Some libraries inject styles with higher specificity. ThemeProvider's inline
+     fallback (JS) will apply border-color/box-shadow/stroke as an important
+     inline style when necessary. Prefer updating CSS variables instead of
+     relying on inline patches.
+*/

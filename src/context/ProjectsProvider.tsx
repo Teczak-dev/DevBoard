@@ -18,9 +18,24 @@ export const ProjectsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const addProject = (project: Project) => {
+    project.id = projects.length + 1;
+    setProjects((prevProjects) => [...prevProjects, project]);
+  };
+
+  const deleteProject = (id: number) => {
+    setProjects((prevProjects) => prevProjects.filter((p) => p.id !== id));
+  };
+
   return (
     <ProjectsContext.Provider
-      value={{ projects, updateProjects, updateProject }}
+      value={{
+        projects,
+        updateProjects,
+        updateProject,
+        addProject,
+        deleteProject,
+      }}
     >
       {children}
     </ProjectsContext.Provider>

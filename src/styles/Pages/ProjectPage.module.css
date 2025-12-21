@@ -1,100 +1,219 @@
+/*
+  ProjectPage.module.css
+
+  Purpose:
+  - Styles for the Project page (layout, action buttons, content panels).
+  - Keep visual tokens (colors, shadows) in src/index.css as CSS variables so
+    theme (light/dark) is centralized.
+
+  Notes for contributors:
+  - Change colors in src/index.css (variables like --surface, --text, --border).
+  - This module focuses on spacing, layout, and component-scoped styles.
+  - Keep classes semantic and minimal. Prefer new component-specific modules for
+    larger UI parts instead of adding many selectors here.
+*/
+
+/* Page container (centers content and provides padding) */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 2rem;
+    box-sizing: border-box;
+    color: var(--text);
+    background: transparent;
     position: relative;
 }
 
+/* Back link / global action (positioned in top-left) */
 .backLink {
-    width: fit-content;
-    height: fit-content;
-    background-color: var(--primary);
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    cursor: pointer;
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 14px;
     text-decoration: none;
+    cursor: pointer;
     position: absolute;
-    top: 10px;
-    left: 10px;
-    transition: ease-in-out 200ms;
+    top: 12px;
+    left: 12px;
+    transition:
+        background-color 160ms ease,
+        transform 80ms ease;
+    font-weight: 600;
+    z-index: 10;
+}
+.backLink:hover,
+.backLink:focus {
+    background: var(--accent);
+    outline: none;
 }
 
-.backLink:hover {
-    background-color: var(--accent);
+/* Right-side action buttons placed in top-right */
+.rightButtons {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
 }
-
 .button {
-    width: fit-content;
-    height: fit-content;
-    background-color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background: var(--primary);
     color: #fff;
     border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        transform 80ms ease;
+    font-weight: 600;
     text-decoration: none;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    transition: ease-in-out 200ms;
+}
+.button:hover,
+.button:focus {
+    background: var(--accent);
+    outline: none;
+}
+.button:active {
+    transform: translateY(1px);
 }
 
-.button:hover {
-    background-color: var(--accent);
+/* Small utility button variants */
+.button.ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
 }
+.button.ghost:hover {
+    background: var(--hover-bg);
+}
+
+/* Primary content area */
 .details {
-    width: 90%;
+    width: 100%;
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 28px;
+    margin-top: 44px; /* give space for top controls */
+    box-sizing: border-box;
 }
 
+/* First row: tasks, snippets or summary panels side-by-side */
 .firstRow {
-    height: fit-content;
-    max-height: 40%;
     display: flex;
-    flex-direction: row;
     gap: 20px;
+    width: 100%;
+    align-items: flex-start;
     justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap;
 }
-.tasks {
-    width: calc(50% - 20px);
-    height: fit-content;
-    max-height: 40%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    background-color: var(--surface);
+
+/* Panel base: use consistent surface style for panels */
+.panel {
+    background: var(--surface);
+    color: var(--text);
     border-radius: 10px;
-    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 16px;
+    box-sizing: border-box;
 }
-.snippets {
-    width: calc(50% - 20px);
-    height: fit-content;
-    max-height: 40%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    background-color: var(--surface);
-    border-radius: 10px;
-    border: 2px solid var(--border);
-}
+
+/* Tasks / snippets common layout */
+.tasks,
+.snippets,
 .markdown {
-    height: fit-content;
+    flex: 1 1 calc(50% - 10px);
+    min-width: 280px;
+    max-height: 60vh;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    gap: 12px;
     background-color: var(--surface);
     border-radius: 10px;
-    border: 2px solid var(--border);
+    padding: 5px 10px;
 }
+
+/* Markdown panel often contains richer content */
+.markdown {
+    padding: 18px;
+}
+
+/* Headings inside panels */
+.panel h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+/* Item lists inside panels */
+.panelList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Inline controls area */
+.controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Status indicator small dot */
+.button.active {
+    background: #181;
+}
+.button.active:hover {
+    background: #1a1;
+}
+.button.inactive {
+    background: #911;
+}
+.button.inactive:hover {
+    background: #a11;
+}
+
+/* Utility text styles */
+.muted {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+/* Responsive: stack panels on narrow screens */
+@media (max-width: 880px) {
+    .firstRow {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .tasks,
+    .snippets,
+    .markdown {
+        flex: 1 1 100%;
+        max-height: none;
+    }
+    .backLink {
+        position: static;
+        margin-bottom: 12px;
+        align-self: flex-start;
+    }
+    .rightButtons {
+        position: static;
+        margin-top: 8px;
+        align-self: flex-end;
+    }
+}
+
+/* Accessibility helpers:
+   - Ensure focusable controls have visible focus (primary focus style defined globally).
+   - When adding interactive elements here, prefer :focus-visible for keyboard focus rings. */

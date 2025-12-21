@@ -4,6 +4,36 @@
         <meta charset="UTF-8" />
         <!--<link rel="icon" type="image/svg+xml" href="/vite.svg" />-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--
+          Set initial data-theme synchronously to avoid flash-of-unstyled-theme (FOUC)
+          Reads user's preference from localStorage ('light' | 'dark' | 'system') and
+          falls back to OS preference when appropriate. Runs before the app JS mounts.
+        -->
+        <script>
+            (function () {
+                try {
+                    var stored = localStorage.getItem("theme");
+                    var theme;
+                    if (stored === "light" || stored === "dark") {
+                        theme = stored;
+                    } else {
+                        // stored is 'system' or null/unknown -> follow OS preference
+                        if (
+                            window.matchMedia &&
+                            window.matchMedia("(prefers-color-scheme: dark)")
+                                .matches
+                        ) {
+                            theme = "dark";
+                        } else {
+                            theme = "light";
+                        }
+                    }
+                    document.documentElement.setAttribute("data-theme", theme);
+                } catch (e) {
+                    // If anything fails, do not block rendering — let CSS default handle it
+                }
+            })();
+        </script>
         <title>Devboard</title>
     </head>
     <body>

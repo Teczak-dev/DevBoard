@@ -6,13 +6,18 @@ import type { Theme } from "../../../context/ThemeContext";
 import hamburger from "../../../assets/hamburger.svg";
 import profile from "../../../assets/profile.svg";
 import { MenuItem, Select } from "@mui/material";
+import ProfileMenu from "../../modules/ProfileMenu/ProfileMenu";
 
 const Header = () => {
   const { theme, toggleTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenSlider, setIsOpenSlider] = useState(false);
+  const [isOpenProfile, setIsOpenProfile] = useState(false);
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    setIsOpenSlider(!isOpenSlider);
+  };
+  const toggleProfile = () => {
+    setIsOpenProfile(!isOpenProfile);
   };
 
   const changeTheme = (value: string | Theme) => {
@@ -32,8 +37,9 @@ const Header = () => {
           value={theme}
           onChange={(e) => changeTheme(e.target.value)}
           sx={{
+            overflow: "hidden",
             minWidth: 100,
-            height: 34,
+            height: 40,
             borderRadius: "5px",
             background: "var(--surface)",
             color: "var(--text)",
@@ -134,10 +140,12 @@ const Header = () => {
             System
           </MenuItem>
         </Select>
-        <img src={profile} alt="user profile" />
+        <button className={styles.profile} onClick={toggleProfile}>
+          <img src={profile} alt="user profile" />
+        </button>
       </div>
-
-      {isOpen && <Sidebar toogle={toggleSidebar} />}
+      {isOpenProfile && <ProfileMenu toggle={toggleProfile} />}
+      {isOpenSlider && <Sidebar toggle={toggleSidebar} />}
     </header>
   );
 };
