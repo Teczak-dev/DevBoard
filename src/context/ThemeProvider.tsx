@@ -1,39 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ThemeContext, type Theme } from "./ThemeContext";
+import { useDevBoardStorage } from "../shared/hooks/useDevBoardStorage";
 
 /**
- * ThemeProvider
+ * ThemeProvider - Global theme management component
  *
- * Purpose
- * - Provide an application-level theme toggle ("light" | "dark" | "system")
- * - Persist user's choice to localStorage
- * - Apply the effective theme to the document root via `data-theme`
+ * This provider manages the application's theme state (light/dark/system) and handles:
+ * - Theme persistence to storage
+ * - Automatic system theme detection when in "system" mode
+ * - DOM attribute updates for CSS theme switching
+ * - Prevention of update loops that could cause infinite re-renders
  *
- * Notes for contributors (concise)
- * - Visual colors are defined as CSS variables in `src/index.css`.
- *   The provider only sets `data-theme` on the document root; CSS consumes
- *   that attribute to switch colors (see `:root[data-theme="..."]`).
- * - We intentionally avoid coupling tightly to MUI's ThemeProvider here to keep
- *   styles driven by CSS variables. MUI-specific overrides live in `src/index.css`.
- * - Some libraries inject styles with high specificity. To remain robust, this
- *   provider applies a defensive inline-style fallback for MUI outlined input
- *   outlines after theme changes. Prefer adjusting CSS variables instead of
- *   relying on these inline patches.
- * - When adding new theme variables, update `src/index.css` and document the
- *   variable name here so contributors know where to modify appearance.
- *
- * Implementation details
- * - `system` mode follows the OS preference via `window.matchMedia`.
- * - We listen for `prefers-color-scheme` changes and re-apply the effective
- *   theme when the user has selected `system`.
- * - This file is intentionally compact and documented so external contributors
- *   can quickly understand how theme selection flows.
+ * The provider integrates with the DevBoard storage system to persist user preferences
+ * while being careful to avoid state synchronization cycles.
  */
-
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // Returns "light" or "dark" based on the OS preference. Safe on SSR.
+  const { data: store, update } = useDevBoardStorage();
+
+  // Initialize theme with store value or default to "system"
+  // This reads the saved theme preference from persistent storage
+  const [theme, setTheme] = useState<Theme>(() => {
+    return store?.settings?.theme || "system";
+  });
+
+  /**
+   * Get the current system color scheme preference
+   * Uses the browser's matchMedia API to detect if user prefers dark mode
+   * Falls back to "light" if window or matchMedia is unavailable (SSR safety)
+   */
   const getSystemTheme = (): "light" | "dark" => {
     if (typeof window === "undefined" || !window.matchMedia) return "light";
     return window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -41,144 +37,74 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
       : "light";
   };
 
-  // Read persisted theme from localStorage with a safe fallback.
-  const getInitialTheme = (): Theme => {
-    try {
-      if (typeof window === "undefined") return "system";
-      const stored = localStorage.getItem("theme") as Theme | null;
-      return stored ?? "system";
-    } catch {
-      return "system";
-    }
-  };
-
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-
-  // Keep in sync with OS preference when in `system` mode.
+  /**
+   * Apply the current theme to the document root
+   * Sets the data-theme attribute on html element for CSS theme switching
+   * When theme is "system", it resolves to actual light/dark based on OS preference
+   */
   useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handler = () => {
-      // Only re-apply when user selected 'system'
-      if (theme === "system") {
-        const effective = mediaQuery.matches ? "dark" : "light";
-        if (typeof document !== "undefined") {
-          document.documentElement.setAttribute("data-theme", effective);
-        }
-      }
-    };
-
-    // Use modern API if available, fallback to legacy listener for Safari.
-    if (typeof mediaQuery.addEventListener === "function") {
-      mediaQuery.addEventListener("change", handler);
-    } else if (typeof mediaQuery.addListener === "function") {
-      mediaQuery.addListener(handler);
-    }
-
-    return () => {
-      if (typeof mediaQuery.removeEventListener === "function") {
-        mediaQuery.removeEventListener("change", handler);
-      } else if (typeof mediaQuery.removeListener === "function") {
-        mediaQuery.removeListener(handler);
-      }
-    };
-    // We intentionally don't include `theme` in dependencies here because the
-    // handler re-reads `theme` when invoked; this keeps the listener registration stable.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Apply the selected theme to document root and persist the user's choice.
-  useEffect(() => {
-    const apply = (t: Theme) => {
-      const effective = t === "system" ? getSystemTheme() : t;
-      if (typeof document !== "undefined") {
-        document.documentElement.setAttribute("data-theme", effective);
-      }
-    };
-
-    apply(theme);
-
-    // Defensive inline application for some MUI outlines where CSS rules
-    // might be overridden by other stronger styles. Inline styles are used
-    // only as a fallback; prefer changing CSS variables in `src/index.css`.
-    try {
-      if (typeof window !== "undefined") {
-        const rootStyle = getComputedStyle(document.documentElement);
-        const border = (rootStyle.getPropertyValue("--border") || "").trim();
-        const primary = (rootStyle.getPropertyValue("--primary") || "").trim();
-        const primarySoft = (
-          rootStyle.getPropertyValue("--primary-soft") || ""
-        ).trim();
-        const disabledBorder = (
-          rootStyle.getPropertyValue("--disabled-border") || ""
-        ).trim();
-
-        // Helper to apply style with an important flag
-        const setImportant = (el: HTMLElement, prop: string, value: string) => {
-          try {
-            el.style.setProperty(prop, value, "important");
-          } catch {
-            // ignore set failures
-          }
-        };
-
-        // Apply to all notched outlines (fieldset or element with class)
-        const outlines = Array.from(
-          document.querySelectorAll<HTMLElement>(
-            ".MuiOutlinedInput-notchedOutline, fieldset.MuiOutlinedInput-notchedOutline",
-          ),
-        );
-        outlines.forEach((el) => {
-          if (border) {
-            setImportant(el, "border-color", border);
-            setImportant(el, "stroke", border); // covers SVG/fieldset stroke cases
-          }
-        });
-
-        // Focused outlines: use primary + soft ring (if present)
-        const focused = Array.from(
-          document.querySelectorAll<HTMLElement>(
-            ".MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline, .MuiOutlinedInput-root.Mui-focused fieldset.MuiOutlinedInput-notchedOutline",
-          ),
-        );
-        focused.forEach((el) => {
-          if (primary) setImportant(el, "border-color", primary);
-          if (primarySoft)
-            setImportant(el, "box-shadow", `0 0 0 4px ${primarySoft}`);
-        });
-
-        // Disabled outlines
-        const disabled = Array.from(
-          document.querySelectorAll<HTMLElement>(
-            ".MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline, .MuiOutlinedInput-root.Mui-disabled fieldset.MuiOutlinedInput-notchedOutline",
-          ),
-        );
-        disabled.forEach((el) => {
-          if (disabledBorder) {
-            setImportant(el, "border-color", disabledBorder);
-            setImportant(el, "stroke", disabledBorder);
-          }
-        });
-      }
-    } catch {
-      // inline fallback is best-effort; CSS remains the primary source of truth.
-    }
-
-    // Persist user choice
-    try {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("theme", theme);
-      }
-    } catch {
-      // ignore storage errors (e.g. quota or disabled storage)
-    }
+    const effectiveTheme = theme === "system" ? getSystemTheme() : theme;
+    document.documentElement.setAttribute("data-theme", effectiveTheme);
   }, [theme]);
 
-  const toggleTheme = (value: Theme) => {
-    setTheme(value);
+  /**
+   * Listen for system theme changes when in "system" mode
+   * This allows the app to automatically switch themes when user changes
+   * their OS dark/light mode preference while the app is running
+   */
+  useEffect(() => {
+    if (theme !== "system") return;
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => {
+      const effectiveTheme = mediaQuery.matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", effectiveTheme);
+    };
+
+    // Add listener for system theme changes
+    mediaQuery.addEventListener("change", handleChange);
+
+    // Cleanup listener on unmount or when theme changes away from "system"
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [theme]);
+
+  /**
+   * Toggle/change the current theme
+   * @param newTheme - The new theme to apply ("light", "dark", or "system")
+   *
+   * This function:
+   * - Updates local state immediately for responsive UI
+   * - Persists explicit themes (light/dark) to storage
+   * - Does NOT persist "system" mode to avoid conflicts with auto-detection
+   * - Includes error handling for storage failures
+   */
+  const toggleTheme = async (newTheme: Theme) => {
+    // Avoid unnecessary updates if theme hasn't changed
+    if (newTheme === theme) return;
+
+    // Update local state immediately (optimistic update)
+    setTheme(newTheme);
+
+    // Only persist explicit themes (not "system") to prevent storage conflicts
+    // System mode should always resolve dynamically from OS preferences
+    if (newTheme !== "system" && update) {
+      try {
+        await update((prev) => ({
+          ...prev,
+          settings: {
+            ...prev.settings,
+            theme: newTheme as "light" | "dark",
+          },
+        }));
+      } catch (error) {
+        console.error("Failed to save theme:", error);
+        // Note: We don't revert the UI state here as the change is still valid
+        // The next app restart will load from storage and may differ from UI
+      }
+    }
   };
 
+  // Provide theme state and toggle function to all child components
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}

@@ -19,6 +19,12 @@
     font-size: 20px;
     color: var(--text);
 }
+.sidebar_logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+    filter: invert(var(--image-svg));
+}
 .sidebar_list {
     margin-top: 50px;
     padding-left: 10px;

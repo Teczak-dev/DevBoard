@@ -5,11 +5,14 @@ import { useTheme } from "../../../shared/hooks/useTheme";
 import type { Theme } from "../../../context/ThemeContext";
 import hamburger from "../../../assets/hamburger.svg";
 import profile from "../../../assets/profile.svg";
+import logo from "../../../assets/logo.png";
 import { MenuItem, Select } from "@mui/material";
 import ProfileMenu from "../../modules/ProfileMenu/ProfileMenu";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
   const [isOpenSlider, setIsOpenSlider] = useState(false);
   const [isOpenProfile, setIsOpenProfile] = useState(false);
 
@@ -24,15 +27,28 @@ const Header = () => {
     toggleTheme(value as Theme);
   };
 
+  const handleLogoClick = () => {
+    navigate("/");
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.left_section}>
         <button onClick={toggleSidebar} className={styles.hamburger}>
           <img src={hamburger} alt="hamburger menu" />
         </button>
+        <button className={styles.logo} onClick={handleLogoClick}>
+          <img src={logo} alt="DevBoard logo" />
+        </button>
+      </div>
+      <div className={styles.search_section}>
+        <input
+          type="text"
+          className={styles.search_input}
+          placeholder="Search..."
+        />
       </div>
       <div className={styles.right_section}>
-        <input type="text" placeholder="Search..." />
         <Select
           value={theme}
           onChange={(e) => changeTheme(e.target.value)}

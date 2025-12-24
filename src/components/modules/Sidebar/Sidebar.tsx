@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./Sidebar.module.css";
 import closeIcon from "../../../assets/close.svg";
+import logo from "../../../assets/logo.png";
 import { NavLink } from "react-router-dom";
 
 const Sidebar = ({ toggle }: { toggle: () => void }) => {
@@ -17,7 +18,9 @@ const Sidebar = ({ toggle }: { toggle: () => void }) => {
     <>
       <div className={styles.closeDiv} onClick={handleClose}></div>
       <div className={`${styles.sidebar} ${hide ? styles.sidebar_hide : ""}`}>
-        <h2 className={styles.sidebar_title}>Menu</h2>
+        <h2 className={styles.sidebar_title}>
+          <img src={logo} alt="DevBoard Logo" className={styles.sidebar_logo} />
+        </h2>
         <div className={styles.sidebar_list}>
           <NavLink
             to="/"

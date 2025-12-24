@@ -1,19 +1,54 @@
 {
   "name": "devboard",
+  "description": "A lightweight, local-first developer workspace for managing projects, notes, and development tools",
+  "version": "0.1.0-beta",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "keywords": [
+    "developer-tools",
+    "workspace",
+    "local-first",
+    "project-management",
+    "markdown-editor",
+    "code-snippets",
+    "tauri",
+    "react"
+  ],
+  "author": {
+    "name": "Mikołaj Sobczak",
+    "url": "https://github.com/Teczak-dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Teczak-dev/DevBoard.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 5174",
+    "dev:web": "vite --port 5174",
+    "dev:tauri": "tauri dev",
     "build": "tsc -b && vite build",
+    "build:web": "tsc -b && vite build",
+    "build:tauri": "tauri build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist target node_modules/.vite",
+    "start": "npm run dev"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.6",
     "@mui/styled-engine-sc": "^7.3.6",
+    "@tauri-apps/api": "^2.9.1",
+    "@tauri-apps/plugin-fs": "^2.4.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.11.0",
@@ -21,6 +56,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@tauri-apps/cli": "^2.9.6",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
