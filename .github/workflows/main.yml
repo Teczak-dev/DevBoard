@@ -1,12 +1,12 @@
-name: Release
+name: 'publish'
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - release
 
 jobs:
-  release:
+  publish-tauri:
     permissions:
       contents: write
     strategy:
@@ -23,21 +23,27 @@ jobs:
             args: ''
 
     runs-on: ${{ matrix.platform }}
-
+    
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: lts/*
+          cache: 'npm'
 
       - name: Install Rust stable
-        uses: dtolnay/rust-action@stable
+        uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-      - name: Install dependencies (Ubuntu only)
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
@@ -51,9 +57,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tauriScript: npm run tauri
           tagName: v__VERSION__
           releaseName: 'App v__VERSION__'
-          releaseBody: 'See the assets to download this version.'
+          releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
