@@ -1,72 +1,50 @@
 /**
  * DevBoard - Tauri environment detection
  *
- * This file contains utility functions to detect whether the application is running
- * in a Tauri (desktop) environment or a regular web browser.
+ * Utility functions to detect whether the application is running in a Tauri
+ * (desktop) environment or a regular web browser.
  *
- * Tauri injects special objects into the window when the application runs
- * in desktop environment, which allows us to detect the execution context.
+ * Prefer checking the public `window.__TAURI__` object (injected by Tauri)
+ * instead of relying on internal implementation details.
  */
 
 /**
- * Checks if the application is running in Tauri environment
+ * Checks if the application is running in a Tauri environment.
  *
- * @returns true if Tauri environment, false if browser
+ * @returns true if Tauri environment, false otherwise
  *
- * Detects the presence of __TAURI_INTERNALS__ object which is automatically
- * injected by Tauri runtime into the global window object.
- *
- * Usage example:
- * ```typescript
- * if (isTauri()) {
- *   // Code specific for desktop application
- *   console.log('Application running as desktop app');
- * } else {
- *   // Code for browser
- *   console.log('Application running in browser');
- * }
- * ```
+ * This uses the public `window.__TAURI__` global if present. It is safer than
+ * checking internal injection points and aligns with the recommended public API.
  */
 export const isTauri = (): boolean => {
-  return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+  return typeof window !== "undefined" && !!window.__TAURI__;
 };
 
 /**
- * Checks if Tauri APIs are fully loaded and ready for use
+ * Checks if Tauri APIs are fully loaded and ready for use.
  *
  * @returns Promise<boolean> - true if APIs are available, false otherwise
  *
- * This function performs a more comprehensive check than isTauri():
- * 1. Checks if we're in Tauri environment
- * 2. Tries to load required APIs (fs, path)
- * 3. Returns true only when all APIs are available
+ * This function:
+ * 1. Verifies we're running in a Tauri environment via `isTauri()`.
+ * 2. Attempts to dynamically import the necessary Tauri modules (fs, path).
+ * 3. Returns true only if imports succeed.
  *
- * Use this function before attempting to use Tauri functions to avoid errors.
- *
- * Usage example:
- * ```typescript
- * if (await isTauriReady()) {
- *   // Safely use Tauri APIs
- *   await saveToFile(data);
- * } else {
- *   // Use alternative method (e.g. localStorage)
- *   localStorage.setItem('data', JSON.stringify(data));
- * }
- * ```
+ * Use this before calling Tauri APIs to avoid runtime errors in browser contexts.
  */
 export const isTauriReady = async (): Promise<boolean> => {
-  // First check if we're in Tauri environment at all
+  // Ensure we're in a Tauri environment first
   if (!isTauri()) {
     return false;
   }
 
   try {
-    // Try to load required Tauri APIs
+    // Try to import essential Tauri APIs
     await import("@tauri-apps/plugin-fs");
     await import("@tauri-apps/api/path");
     return true;
   } catch (error) {
-    // APIs are not available - probably configuration issue
+    // Not all APIs available - probably not fully initialized or misconfigured
     console.warn("⚠️ Tauri APIs not available:", error);
     return false;
   }

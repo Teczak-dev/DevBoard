@@ -1,0 +1,35 @@
+.content {
+    /* take the full width of the parent/content area */
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    /* two equal columns that together fill the content width */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: start;
+    padding: 20px;
+    box-sizing: border-box;
+    /* ensure grid items stretch to fill their cells */
+    align-content: start;
+}
+
+/* Responsive: single column on narrow viewports */
+@media (max-width: 800px) {
+    .content {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+}
+.button {
+    background-color: var(--primary);
+    color: #f1f1f1;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: var(--accent);
+}

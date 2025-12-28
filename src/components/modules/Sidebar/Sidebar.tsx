@@ -53,10 +53,10 @@ const Sidebar = ({ toggle }: { toggle: () => void }) => {
             }
             onClick={handleClose}
           >
-            Markdown Editor
+            Markdown
           </NavLink>
           <NavLink
-            to="/projects-todo"
+            to="/projects-tasks"
             className={({ isActive }) =>
               isActive
                 ? `${styles.sidebar_item} ${styles.sidebar_selected}`
@@ -64,7 +64,7 @@ const Sidebar = ({ toggle }: { toggle: () => void }) => {
             }
             onClick={handleClose}
           >
-            Projects TODO
+            Tasks
           </NavLink>
         </div>
         <button className={styles.close_button} onClick={handleClose}>

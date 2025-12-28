@@ -76,29 +76,11 @@ const ProjectPage: React.FC = () => {
       ) : (
         <ProjectInfo item={item} />
       )}
-      {/*<h1 style={{ marginBottom: "5px", maxWidth: "50%", textWrap: "wrap" }}>
-        {item.title}
-      </h1>
-      <p style={{ marginTop: "5px" }}>Project id: {item.id}</p>
-      <p
-        style={{
-          maxWidth: "300px",
-          maxHeight: "300px",
-          textWrap: "wrap",
-          textAlign: "center",
-        }}
-      >
-        Description:
-        <br />{" "}
-        {item.description?.length || "".length > 0
-          ? item.description
-          : "No description provided"}
-      </p>*/}
       <div className={styles.details}>
         <div className={styles.firstRow}>
           <div className={styles.tasks}>
             <h2>Tasks</h2>
-            {item.tasks ? (
+            {Array.isArray(item.tasks) && item.tasks.length > 0 ? (
               <ul>
                 {item.tasks.map((task) => (
                   <li key={task}>{task}</li>
@@ -110,7 +92,7 @@ const ProjectPage: React.FC = () => {
           </div>
           <div className={styles.snippets}>
             <h2>Snippets</h2>
-            {item.snippets ? (
+            {Array.isArray(item.snippets) && item.snippets.length > 0 ? (
               <ul>
                 {item.snippets.map((snippet) => (
                   <li key={snippet}>{snippet}</li>

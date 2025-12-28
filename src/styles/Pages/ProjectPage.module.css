@@ -107,12 +107,13 @@
     box-sizing: border-box;
 }
 
-/* First row: tasks, snippets or summary panels side-by-side */
+/* First row: tasks and snippets side-by-side with equal widths */
 .firstRow {
     display: flex;
     gap: 20px;
     width: 100%;
     align-items: flex-start;
+    /* Ensure the two panels share available space and wrap on narrow screens */
     justify-content: space-between;
     flex-wrap: wrap;
 }
@@ -130,8 +131,8 @@
 
 /* Tasks / snippets common layout */
 .tasks,
-.snippets,
-.markdown {
+.snippets {
+    /* Two equal columns that share available width (accounts for gap) */
     flex: 1 1 calc(50% - 10px);
     min-width: 280px;
     max-height: 60vh;
@@ -141,12 +142,21 @@
     gap: 12px;
     background-color: var(--surface);
     border-radius: 10px;
-    padding: 5px 10px;
+    padding: 12px;
+    box-sizing: border-box;
 }
 
-/* Markdown panel often contains richer content */
+/* Markdown should span the full width equal to the two panels combined */
 .markdown {
+    /* Take the full content width from .details so it equals tasks + snippets combined */
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--surface);
+    border-radius: 10px;
     padding: 18px;
+    max-height: 60vh;
+    overflow-y: auto;
+    display: block;
 }
 
 /* Headings inside panels */
@@ -188,30 +198,6 @@
 .muted {
     color: var(--muted);
     font-size: 0.95rem;
-}
-
-/* Responsive: stack panels on narrow screens */
-@media (max-width: 880px) {
-    .firstRow {
-        flex-direction: column;
-        gap: 16px;
-    }
-    .tasks,
-    .snippets,
-    .markdown {
-        flex: 1 1 100%;
-        max-height: none;
-    }
-    .backLink {
-        position: static;
-        margin-bottom: 12px;
-        align-self: flex-start;
-    }
-    .rightButtons {
-        position: static;
-        margin-top: 8px;
-        align-self: flex-end;
-    }
 }
 
 /* Accessibility helpers:

@@ -1,10 +1,12 @@
-import { TextField } from "@mui/material";
+import React from "react";
 import styles from "../styles/Pages/AddProject.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAddProject } from "../shared/hooks/useAddProject";
 import { useProjects } from "../shared/hooks/useProjects";
+import { Link } from "react-router-dom";
+import { TextField } from "@mui/material";
 
-const AddProject = () => {
+const AddProjectPage: React.FC = () => {
   const { addProject } = useProjects();
   const navigate = useNavigate();
   const {
@@ -16,6 +18,7 @@ const AddProject = () => {
     handleProjectDescriptionChange,
     handleAddProject,
   } = useAddProject(addProject, navigate);
+
   return (
     <div className={styles.container}>
       <h1>Add Project</h1>
@@ -69,4 +72,4 @@ const AddProject = () => {
     </div>
   );
 };
-export default AddProject;
+export default AddProjectPage;

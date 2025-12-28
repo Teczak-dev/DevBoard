@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "devboard",
-  "version": "0.1.0",
+  "productName": "Devboard",
+  "version": "0.0.2",
   "identifier": "com.miksob.dev",
   "build": {
     "frontendDist": "../dist",
@@ -17,8 +17,8 @@
         "height": 600,
         "resizable": true,
         "fullscreen": false,
-	"minWidth": 800,
-	"minHeight": 600
+        "minWidth": 800,
+        "minHeight": 600
       }
     ],
     "security": {

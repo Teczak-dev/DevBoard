@@ -1,0 +1,58 @@
+.popup {
+    position: fixed;
+    background-color: var(--bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    width: fit-content;
+    max-width: 300px;
+    height: fit-content;
+    max-height: 200px;
+    left: -300px;
+    top: 100px;
+    transition: ease-in-out 200ms;
+    animation: fade-in 200ms ease-in-out forwards;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+.popup.closed {
+    animation: fade-out 200ms ease-in-out forwards;
+}
+.popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    color: var(--text);
+    padding: 5px 10px;
+    border-radius: 10px;
+    z-index: 1001;
+    transition: ease-in-out 200ms;
+}
+.closeButton:hover {
+    background-color: var(--surface);
+}
+@keyframes fade-in {
+    from {
+        left: -320px;
+    }
+    to {
+        left: 20px;
+    }
+}
+@keyframes fade-out {
+    from {
+        left: 20px;
+    }
+    to {
+        left: -320px;
+    }
+}

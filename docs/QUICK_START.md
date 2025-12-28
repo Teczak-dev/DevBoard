@@ -1,195 +1,61 @@
-# DevBoard - Quick Start Guide
+# DevBoard — Quick Start (short)
 
-Get DevBoard running in **5 minutes** with this streamlined setup guide.
+This quick guide helps you run DevBoard locally (desktop or web) and covers the most common commands and troubleshooting steps.
 
-> 🖥️ **Desktop-First**: This guide prioritizes the native desktop application with optional web access.
+## Options
 
-## 📥 Installation (Recommended)
+### 1) Download release (recommended)
+- Visit the repository Releases and download the package for your OS.
+- Install and run the native app.
 
-### Option 1: Download Release (Fastest)
+### 2) Build from source (developer)
+Requirements:
+- Node.js 18+
+- (For desktop) Rust & Tauri toolchain
 
-1. **Go to [Releases](../../../releases)**
-2. **Download for your platform:**
-   - **Windows**: `DevBoard_x.x.x_x64_en-US.msi`
-   - **macOS**: `DevBoard_x.x.x_x64.dmg`
-   - **Linux**: `devboard_x.x.x_amd64.AppImage`
-3. **Install and launch DevBoard**
-
-✅ **Done!** Your projects will be saved locally and persist between sessions.
-
-### Option 2: Build from Source
-
-**Prerequisites:**
-- Node.js 18+ ([Download](https://nodejs.org/))
-- Rust ([Install](https://rustup.rs/))
-
-**Setup:**
+Quick commands:
 ```bash
-# Clone repository
-git clone https://github.com/your-username/DevBoard.git
-cd DevBoard
-
-# Install dependencies
-npm install
-
-# Launch desktop app
-npm run dev:tauri
-```
-
----
-
-## 🚀 First Launch
-
-### 1. Create Your First Project
-
-1. **Click "New Project"**
-2. **Fill in details:**
-   - **Name**: `My First Project`
-   - **Description**: `Learning DevBoard`
-   - **Status**: `Active`
-3. **Click "Create Project"**
-
-### 2. Add Some Content
-
-**Snippets:**
-- Click "Add Snippet"
-- Paste some code and add tags
-- Save for later reference
-
-**Notes:**
-- Use the Markdown editor
-- Preview changes in real-time
-- Export as PDF when needed
-
-**TODOs:**
-- Add tasks to track project progress
-- Mark items as complete
-- Stay organized
-
-### 3. Data Storage
-
-Your projects are automatically saved to:
-- **Windows**: `%APPDATA%\DevBoard\devboard.json`
-- **macOS**: `~/Library/Application Support/DevBoard/devboard.json`
-- **Linux**: `~/.config/DevBoard/devboard.json`
-
----
-
-## 💻 Web Version (Optional)
-
-For quick access without installation:
-
-```bash
-# Clone and setup (if not done already)
-git clone https://github.com/your-username/DevBoard.git
+git clone https://github.com/Teczak-dev/DevBoard.git
 cd DevBoard
 npm install
 
-# Start web server
+# Web (development)
 npm run dev
-# Open http://localhost:5174
-```
 
-> ⚠️ **Note**: Web version uses browser localStorage - data won't sync with desktop app
-
----
-
-## 🔧 Development Setup
-
-### Desktop Development
-```bash
-# Install dependencies
-npm install
-
-# Start desktop development
-npm run dev:tauri
-
-# Build for production
-npm run build:tauri
-```
-
-### Available Commands
-```bash
-npm run dev:tauri     # Desktop development
-npm run dev           # Web development  
-npm run build:tauri   # Desktop production build
-npm run build         # Web production build
-npm run lint          # Code linting
-npm run type-check    # TypeScript validation
-```
-
----
-
-## 🛠️ Troubleshooting
-
-### Desktop App Won't Start
-
-**Check Prerequisites:**
-```bash
-# Verify installations
-node --version    # Should be 18+
-rustc --version   # Should show Rust version
-npm --version     # Should show npm version
-```
-
-**Common Fixes:**
-```bash
-# Clear cache and reinstall
-rm -rf node_modules src-tauri/target
-npm install
+# Desktop (development — requires Rust/Tauri)
 npm run dev:tauri
 ```
 
-### Build Errors
+## First steps in the app
+- Click "New Project" → enter name and description → Create.
+- Add Snippets, Notes, and TODOs from the project UI.
+- Use "Copy" on a snippet to copy code — a small popup confirms the copy.
 
-**Linux:**
-```bash
-sudo apt-get update
-sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
-```
+Note: Popups perform a short closing animation (fade-out) before they are removed from the DOM to keep the UX smooth.
 
-**macOS:**
-```bash
-xcode-select --install
-source ~/.cargo/env
-```
+## Data storage locations
+- Desktop (Tauri): saved as JSON in the platform app data folder:
+  - Windows: `%APPDATA%\DevBoard\devboard.json`
+  - macOS: `~/Library/Application Support/DevBoard/devboard.json`
+  - Linux: `~/.config/DevBoard/devboard.json`
+- Web: browser localStorage (per-origin; not synced with desktop).
 
-**Windows:**
-- Install Visual Studio Build Tools
-- Or use [Chocolatey](https://chocolatey.org/): `choco install visualstudio2019buildtools`
+## Common developer commands
+- `npm install` — install dependencies
+- `npm run dev` — start web development server
+- `npm run dev:tauri` — start desktop app in dev mode (requires Rust)
+- `npm run build` — build web production bundle
+- `npm run build:tauri` — build desktop production app
+- `npm run lint` — run linters
+- `npm run type-check` — run TypeScript type checks
 
-### Port Issues
-```bash
-# If port 5174 is busy
-lsof -ti:5174 | xargs kill -9
+## Quick troubleshooting
+- If the dev server shows no changes: restart `npm run dev`, clear browser cache, perform a hard refresh.
+- Port in use (default 5174): `lsof -ti:5174 | xargs kill -9` or run with a different port.
+- Install / dependency errors: remove `node_modules` and `package-lock.json`, then `npm install`.
+- Tauri build failures: `cd src-tauri && cargo clean`, update Rust toolchain with `rustup update` and try again.
+- Storage issues: check the platform-specific file above or localStorage in browser DevTools.
 
-# Or use different port
-npm run dev -- --port 5175
-```
-
-### Data Recovery
-- **Desktop**: Check the data file locations above
-- **Web**: Browser DevTools → Application → Local Storage
-- **Reset**: Delete data file or clear localStorage
-
----
-
-## 🌟 Next Steps
-
-1. **📖 [Read the Main README](../README.md)** - Complete project overview
-2. **🔧 [Development Guide](DEVELOPMENT.md)** - Architecture and contributing
-3. **💾 [Storage System](STORAGE_SYSTEM.md)** - Understanding data management
-4. **📦 [Deployment Guide](DEPLOYMENT.md)** - Building and distribution
-5. **🩺 [Troubleshooting](TROUBLESHOOTING.md)** - Solutions for common issues
-
----
-
-## 🤔 Need Help?
-
-- **💬 [GitHub Discussions](../../../discussions)** - Ask questions and share ideas
-- **🐛 [Report Issues](../../../issues)** - Found a bug? Let us know
-- **📚 [Complete Documentation](README.md)** - In-depth guides
-
----
-
-**Ready to organize your development workflow? Welcome to DevBoard! 🎉**
+## Need help?
+- Include OS, Node and Rust versions, a short reproduction, and relevant logs when opening an Issue.
+- Check repository Issues and Discussions for existing reports and guidance.

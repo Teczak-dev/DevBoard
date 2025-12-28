@@ -12,10 +12,10 @@
 declare global {
   interface Window {
     /**
-     * Tauri internal object - used for environment detection
-     * Exists only in desktop application, not in browser
+     * Note: internal implementation markers have been removed from the
+     * TypeScript declarations. Prefer using the public `__TAURI__` global
+     * object for feature detection and runtime APIs.
      */
-    __TAURI_INTERNALS__?: any;
 
     /**
      * Main Tauri API with access to operating system functions

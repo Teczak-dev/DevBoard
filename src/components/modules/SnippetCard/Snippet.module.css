@@ -1,0 +1,139 @@
+.snippet {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    background-color: var(--surface);
+    transition: box-shadow 200ms ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+.snippet * {
+    transition: ease-in-out 200ms;
+}
+
+.snippetHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.snippetTitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+    word-break: break-word;
+}
+
+.snippetButton {
+    background-color: transparent;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.snippetButton:hover {
+    text-decoration: underline;
+}
+
+/* Wrapper that will expand/collapse with animation.
+   It contains a left gutter (line numbers) and the code block on the right. */
+.snippetContent {
+    margin-top: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    /* collapsed by default; transition max-height for smooth open/close */
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+        max-height 300ms ease,
+        opacity 200ms ease;
+    /* keep internal text layout consistent */
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* When the content is open we allow it to expand.
+   We use a large max-height as a fallback if JS doesn't set the exact height. */
+.snippetContent.open {
+    max-height: 1000px;
+    opacity: 1;
+}
+
+/* layout inside the scrollable area: gutter + code columns */
+.codeColumns {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+/* gutter (line numbers) */
+.gutter {
+    width: 3.2rem;
+    min-width: 3.2rem;
+    text-align: right;
+    color: var(--muted, #888);
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    padding-top: 0.5rem;
+    padding-right: 8px;
+    box-sizing: border-box;
+    user-select: none;
+    overflow: hidden;
+}
+
+.gutterLine {
+    padding: 0 4px;
+}
+
+/* Code block: allow scrolling for long lines when open.
+   We remove a fixed max-height here and rely on the wrapper to control visibility during expand/collapse.
+   When opened the wrapper sets max-height to 'none' so the entire code is visible; when closed the code overflow is hidden. */
+.snippetCode {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    width: 100%;
+    overflow: auto; /* allow scroll when content exceeds the visible area */
+    white-space: pre; /* preserve long lines to trigger horizontal scrollbar */
+    box-sizing: border-box;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    background-color: var(--code-surface, rgba(0, 0, 0, 0.02));
+    padding: 0.5rem;
+    border-radius: 4px;
+    /* subtle shadow and smoother appearance on open */
+    transition:
+        box-shadow 200ms ease,
+        background-color 200ms ease;
+}
+
+/* When content is collapsed we hide overflow from the code block and gutter as well */
+.snippetContent:not(.open) .snippetCode,
+.snippetContent:not(.open) .gutter {
+    overflow: hidden;
+    pointer-events: none; /* prevent accidental text selection when closed */
+}
+
+/* small viewport adjustments */
+@media (max-width: 800px) {
+    .snippet {
+        width: 100%;
+    }
+    .codeColumns {
+        gap: 8px;
+    }
+    .gutter {
+        width: 2.6rem;
+        min-width: 2.6rem;
+        padding-right: 6px;
+        font-size: 0.85rem;
+    }
+}

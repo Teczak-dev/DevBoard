@@ -4,7 +4,9 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ProjectsProvider } from "./context/ProjectsProvider";
+import { SnippetsProvider } from "./context/SnippetsProvider";
 import "./index.css";
+import { isTauri } from "./shared/utils/isTauri";
 
 /**
  * DevBoard - Main application entry point
@@ -30,8 +32,7 @@ import "./index.css";
  */
 async function initializeTauriAPIs(): Promise<void> {
   // Check if application is running in Tauri environment
-  const isTauriEnvironment =
-    typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+  const isTauriEnvironment = isTauri();
 
   if (isTauriEnvironment) {
     try {
@@ -60,7 +61,9 @@ function renderApp(): void {
       <BrowserRouter>
         <ThemeProvider>
           <ProjectsProvider>
-            <AppRoutes />
+            <SnippetsProvider>
+              <AppRoutes />
+            </SnippetsProvider>
           </ProjectsProvider>
         </ThemeProvider>
       </BrowserRouter>
@@ -74,8 +77,7 @@ function renderApp(): void {
  * In Tauri environment: wait for APIs to load before rendering
  * In browser: render immediately
  */
-const isTauriEnvironment =
-  typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
+const isTauriEnvironment = isTauri();
 
 if (isTauriEnvironment) {
   // Tauri environment - wait for APIs
