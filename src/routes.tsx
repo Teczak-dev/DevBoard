@@ -4,9 +4,10 @@ import AppLayout from "./layout/AppLayout";
 import DashboardPage from "./pages/DashboardPage";
 import SnippetsPage from "./pages/SnippetsPage";
 import MarkdownPage from "./pages/MarkdownPage";
-import TODOPage from "./pages/TODOPage";
+import TasksPage from "./pages/TasksPage";
 import ProjectPage from "./pages/ProjectPage";
-import AddProject from "./pages/AddProject";
+import AddProjectPage from "./pages/AddProjectPage";
+import AddSnippetPage from "./pages/AddSnippetPage";
 
 /**
  * DevBoard - Application routing configuration
@@ -41,7 +42,10 @@ const AppRoutes: React.FC = () => {
         <Route index element={<DashboardPage />} />
 
         {/* New project creation form */}
-        <Route path="add-project" element={<AddProject />} />
+        <Route path="add-project" element={<AddProjectPage />} />
+
+        {/* New snippet creation form */}
+        <Route path="add-snippet" element={<AddSnippetPage />} />
 
         {/* Specific project details - :id is dynamic parameter */}
         <Route path="/project/:id" element={<ProjectPage />} />
@@ -53,7 +57,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/markdown-editor" element={<MarkdownPage />} />
 
         {/* Project task list */}
-        <Route path="/projects-todo" element={<TODOPage />} />
+        <Route path="/projects-tasks" element={<TasksPage />} />
       </Route>
     </Routes>
   );

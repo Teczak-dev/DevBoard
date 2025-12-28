@@ -13,40 +13,6 @@
     styles where appropriate.
 */
 
-.container {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--text);
-    background-color: transparent;
-}
-
-/* Page title + actions container */
-.title {
-    width: 100%;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-.title h1 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text);
-}
-
-/* Short description under the title */
-.description {
-    font-size: 1.25rem;
-    text-align: center;
-    color: var(--muted);
-    margin-top: 8px;
-}
-
 /* Primary action button used on the dashboard (keeps colors from variables) */
 .btn {
     padding: 10px 20px;
@@ -85,14 +51,5 @@
         flex-direction: column;
         gap: 10px;
         padding: 6px 0;
-    }
-    .title {
-        height: auto;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
-    .description {
-        font-size: 1rem;
     }
 }

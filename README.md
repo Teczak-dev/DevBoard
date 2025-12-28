@@ -1,5 +1,6 @@
 # DevBoard
-
+![DevBoard](./docs/mm/Devboard.png)
+---
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -16,7 +17,7 @@
 - 📊 **Local project dashboard** - organize your development work
 - 📝 **Markdown editor** with live preview and PDF export  
 - ✂️ **Code snippet manager** - save and organize code per project
-- ✅ **TODO tracking** - keep project tasks in sync
+- ✅ **Tasks tracking** - keep project tasks in sync
 - 🗒️ **Development notes** - document ideas and code reviews
 - 🌙 **Dark/Light themes** - comfortable coding environment
 - 💾 **Local-first** - your data stays on your machine
@@ -44,17 +45,17 @@
 
 **Option 2: Build From Source**
 ```bash
-git clone https://github.com/your-username/DevBoard.git
+git clone https://github.com/Teczak-dev/DevBoard.git
 cd DevBoard
 npm install
-npm run dev:tauri
+npm run build:tauri
 ```
 
 #### Data Storage
 Your projects are saved locally:
-- **Windows**: `%APPDATA%\DevBoard\devboard.json`
-- **macOS**: `~/Library/Application Support/DevBoard/devboard.json`
-- **Linux**: `~/.config/DevBoard/devboard.json`
+- **Windows**: `%APPDATA%\Roaming\com.miksob.dev\`
+- **macOS**: `~/Library/Application Support/com.miksob.dev/`
+- **Linux**: `~/.local/share/com.miksob.dev/`
 
 ### Web Version (Optional)
 
@@ -77,8 +78,7 @@ npm run dev
 # Setup
 npm install
 
-# Development (launches desktop
- app)
+# Development (launches desktop app)
 npm run dev:tauri
 
 # Production build
@@ -97,8 +97,7 @@ npm run build
 ### Available Scripts
 ```bash
 npm run dev:tauri     # Desktop development
-npm run dev
-           # Web development
+npm run dev # Web development
 npm run build:tauri   # Desktop production build
 npm run build         # Web production build
 npm run lint          # Code linting
@@ -211,9 +210,6 @@ Build instructions and distribution guide
 ### 🩺 [Troubleshooting](/docs/TROUBLESHOOTING.md)
 Solutions for common issues
 
-### 🔌 [API Reference](/docs/API_REFERENCE.md)
-Complete technical documentation for developers
-
 ---
 
 ## 🔧 Troubleshooting
@@ -257,12 +253,12 @@ npm run dev:tauri
 - [x] Cross-platform desktop application
 - [x] Local-first storage system
 - [x] Project management core
-- [x] CI/CD pipeline for releases
+- [x] Basic snippet  manager
 
 ### 🚧 Current (v0.1.0)
 - [ ] Complete snippet manager
 - [ ] Enhanced markdown editor
-- [ ] TODO system improvements
+- [ ] Tasks system improvements
 - [ ] PDF export functionality
 
 ### 📋 Planned (v0.2.0+)

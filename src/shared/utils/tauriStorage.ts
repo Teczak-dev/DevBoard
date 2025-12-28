@@ -12,6 +12,7 @@
  */
 
 import type { StorageAdapter } from "../types/storage";
+import { isTauriReady } from "./isTauri";
 
 /**
  * Generates the full file path for a given storage key
@@ -39,26 +40,13 @@ const getFilePath = async (key: string): Promise<string> => {
 };
 
 /**
- * Checks if Tauri environment and its APIs are available
+ * Checks if Tauri APIs are available by delegating to shared helper
  *
- * @returns Promise<boolean> - true if APIs are ready for use
+ * This delegates to `isTauriReady()` from the shared detection util so that
+ * detection logic is centralized and we avoid checking internal globals
+ * directly in multiple places.
  */
-const isTauriApiAvailable = async (): Promise<boolean> => {
-  try {
-    // Check for Tauri environment presence
-    if (typeof window === "undefined" || !("__TAURI_INTERNALS__" in window)) {
-      return false;
-    }
-
-    // Try to load required APIs
-    await import("@tauri-apps/plugin-fs");
-    await import("@tauri-apps/api/path");
-    return true;
-  } catch (error) {
-    console.warn("⚠️ Tauri APIs not available:", error);
-    return false;
-  }
-};
+const isTauriApiAvailable = isTauriReady;
 
 /**
  * Tauri file system storage adapter
