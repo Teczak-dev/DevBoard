@@ -8,6 +8,7 @@ import TasksPage from "./pages/TasksPage";
 import ProjectPage from "./pages/ProjectPage";
 import AddProjectPage from "./pages/AddProjectPage";
 import AddSnippetPage from "./pages/AddSnippetPage";
+import EditSnippetPage from "./pages/EditSnippetPage";
 
 /**
  * DevBoard - Application routing configuration
@@ -20,6 +21,8 @@ import AddSnippetPage from "./pages/AddSnippetPage";
  * - "/add-project" - new project creation form
  * - "/project/:id" - specific project details (dynamic ID)
  * - "/snippets" - code snippet management
+ * - "/add-snippet" - new snippet creation form
+ * - "/edit-snippet/:id" - edit existing snippet (dynamic ID)
  * - "/markdown-editor" - Markdown document editor
  * - "/projects-todo" - project task list
  *
@@ -46,6 +49,9 @@ const AppRoutes: React.FC = () => {
 
         {/* New snippet creation form */}
         <Route path="add-snippet" element={<AddSnippetPage />} />
+
+        {/* Edit existing snippet */}
+        <Route path="edit-snippet/:id" element={<EditSnippetPage />} />
 
         {/* Specific project details - :id is dynamic parameter */}
         <Route path="/project/:id" element={<ProjectPage />} />

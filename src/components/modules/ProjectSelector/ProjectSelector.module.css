@@ -1,0 +1,161 @@
+.container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.section {
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  margin: 0 0 8px 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.projectList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.projectItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: all 160ms ease;
+}
+
+.projectItem:hover {
+  background: var(--hover-bg);
+}
+
+.projectInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.projectName {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.projectName.active {
+  color: #4caf50;
+}
+
+.projectName.inactive {
+  color: var(--muted);
+}
+
+.projectStatus {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+.removeButton {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.removeButton:hover {
+  background: rgba(221, 31, 31, 0.1);
+}
+
+.addSection {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.select {
+  flex: 1;
+}
+
+.menuItemContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.menuStatus {
+  font-size: 0.75rem;
+  text-transform: capitalize;
+  margin-left: 8px;
+}
+
+.menuStatus.active {
+  color: #4caf50;
+}
+
+.menuStatus.inactive {
+  color: var(--muted);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .container {
+    min-width: 280px;
+    padding: 12px;
+  }
+  
+  .projectItem {
+    padding: 6px 8px;
+  }
+  
+  .addSection {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .select {
+    flex: none;
+  }
+}

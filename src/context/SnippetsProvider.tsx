@@ -14,8 +14,15 @@ import { useDevBoardStorage } from "../shared/hooks/useDevBoardStorage";
  * - Bulk snippet updates
  *
  * The provider integrates with the DevBoard storage system to ensure all snippet
- * changes are persisted automatically. All operations are asynchronous and include
- * error handling to prevent data loss.
+ * changes are persisted automatically. All operations are asynchronous to support
+ * both web (localStorage) and desktop (Tauri file system) storage backends.
+ * 
+ * Key features:
+ * - Auto-generated unique IDs for new snippets
+ * - Optimistic updates for responsive UI
+ * - Comprehensive error handling and logging
+ * - Atomic operations to prevent data corruption
+ * - Memoized state to optimize React re-renders
  */
 export const SnippetsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -38,9 +45,14 @@ export const SnippetsProvider: React.FC<{ children: React.ReactNode }> = ({
    * This is useful for bulk operations like importing snippets or resetting
    * the entire snippet list. Includes error handling to prevent data corruption.
    */
-  const updateSnippets = (value: Snippet[]) => {
+  const updateSnippets = async (value: Snippet[]) => {
     if (!update) return;
-    update((prev) => ({ ...prev, snippets: value })).catch(console.error);
+    
+    try {
+      await update((prev) => ({ ...prev, snippets: value }));
+    } catch (error) {
+      console.error("❌ Error updating snippets:", error);
+    }
   };
 
   /**
@@ -51,14 +63,19 @@ export const SnippetsProvider: React.FC<{ children: React.ReactNode }> = ({
    * Finds and replaces the snippet with matching ID while preserving
    * all other snippets in the array. Non-destructive operation.
    */
-  const updateSnippet = (id: number, snippet: Snippet) => {
+  const updateSnippet = async (id: number, snippet: Snippet) => {
     if (!update) return;
-    update((prev) => {
-      const nextSnippets = prev.snippets.map((s) =>
-        s.id === id ? snippet : s,
-      );
-      return { ...prev, snippets: nextSnippets };
-    }).catch(console.error);
+    
+    try {
+      await update((prev) => {
+        const nextSnippets = prev.snippets.map((s) =>
+          s.id === id ? snippet : s,
+        );
+        return { ...prev, snippets: nextSnippets };
+      });
+    } catch (error) {
+      console.error("❌ Error updating snippet:", error);
+    }
   };
 
   /**
@@ -69,20 +86,25 @@ export const SnippetsProvider: React.FC<{ children: React.ReactNode }> = ({
    * and incrementing by 1. Handles the case when no snippets exist (starts at ID 1).
    * Appends the new snippet to the end of the snippets array.
    */
-  const addSnippet = (snippet: Snippet) => {
+  const addSnippet = async (snippet: Snippet) => {
     if (!update) return;
-    update((prev) => {
-      // Find the highest existing ID to generate a unique new ID
-      const maxId = prev.snippets.length
-        ? Math.max(...prev.snippets.map((s) => s.id))
-        : 0;
+    
+    try {
+      await update((prev) => {
+        // Find the highest existing ID to generate a unique new ID
+        const maxId = prev.snippets.length
+          ? Math.max(...prev.snippets.map((s) => s.id))
+          : 0;
 
-      // Create new snippet with auto-generated ID
-      const newSnippet = { ...snippet, id: maxId + 1 };
+        // Create new snippet with auto-generated ID
+        const newSnippet = { ...snippet, id: maxId + 1 };
 
-      // Add to end of snippets array
-      return { ...prev, snippets: [...prev.snippets, newSnippet] };
-    }).catch(console.error);
+        // Add to end of snippets array
+        return { ...prev, snippets: [...prev.snippets, newSnippet] };
+      });
+    } catch (error) {
+      console.error("❌ Error adding snippet:", error);
+    }
   };
 
   /**
@@ -92,12 +114,17 @@ export const SnippetsProvider: React.FC<{ children: React.ReactNode }> = ({
    * Filters out the snippet with matching ID from the snippets array.
    * This is a permanent deletion operation - the snippet data will be lost.
    */
-  const deleteSnippet = (id: number) => {
+  const deleteSnippet = async (id: number) => {
     if (!update) return;
-    update((prev) => ({
-      ...prev,
-      snippets: prev.snippets.filter((s) => s.id !== id),
-    })).catch(console.error);
+    
+    try {
+      await update((prev) => ({
+        ...prev,
+        snippets: prev.snippets.filter((s) => s.id !== id),
+      }));
+    } catch (error) {
+      console.error("❌ Error deleting snippet:", error);
+    }
   };
 
   // Provide snippet state and all CRUD operations to child components

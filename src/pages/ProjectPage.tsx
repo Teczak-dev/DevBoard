@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styles from "../styles/Pages/ProjectPage.module.css";
 import { useProjects } from "../shared/hooks/useProjects";
+import { useSnippetProjectRelations } from "../shared/hooks/useSnippetProjectRelations";
 import type { Project } from "../shared/types/project";
 import ProjectInfo from "../components/modules/ProjectInfo/ProjectInfo";
 import EditProjectInfo from "../components/modules/EditProjectInfo/EditProjectInfo";
+import MiniSnippetCard from "../components/modules/MiniSnippetCard/MiniSnippetCard";
 
 const ProjectPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const { projects, updateProject } = useProjects();
+  const { getSnippetsForProject } = useSnippetProjectRelations();
   const [isEditing, setIsEditing] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  
   if (!id) {
     return (
       <div className={styles.container}>
@@ -21,28 +26,33 @@ const ProjectPage: React.FC = () => {
   }
 
   // Parse id safely (base 10) and validate
-  const parsedId = Number.parseInt(id, 10);
-  if (Number.isNaN(parsedId)) {
+  const projectId = parseInt(id, 10);
+  if (isNaN(projectId)) {
     return (
       <div className={styles.container}>
-        <h1>Invalid project id</h1>
-        <p>The provided id "{id}" is not a valid number.</p>
+        <h1>Project</h1>
+        <p>Invalid project ID in the URL.</p>
         <Link to="/">Go back to dashboard</Link>
       </div>
     );
   }
 
-  // Find the item
-  const item = projects.find((it) => it.id === parsedId);
+  const item = projects.find((p) => p.id === projectId);
   if (!item) {
     return (
       <div className={styles.container}>
         <h1>Project not found</h1>
-        <p>No project exists with id {parsedId}.</p>
+        <p>No project exists with id {projectId}.</p>
         <Link to="/">Go back to dashboard</Link>
       </div>
     );
   }
+
+  const snippetsInProject = getSnippetsForProject(projectId);
+  
+  const handleSnippetRemoved = () => {
+    setRefreshKey(prev => prev + 1);
+  };
 
   const changeStatus = () => {
     const newStatus = item.status === "active" ? "inactive" : "active";
@@ -92,14 +102,24 @@ const ProjectPage: React.FC = () => {
           </div>
           <div className={styles.snippets}>
             <h2>Snippets</h2>
-            {Array.isArray(item.snippets) && item.snippets.length > 0 ? (
-              <ul>
-                {item.snippets.map((snippet) => (
-                  <li key={snippet}>{snippet}</li>
+            {snippetsInProject.length > 0 ? (
+              <div className={styles.snippetsList} key={refreshKey}>
+                {snippetsInProject.map((snippet) => (
+                  <MiniSnippetCard
+                    key={snippet.id}
+                    snippetId={snippet.id}
+                    projectId={projectId}
+                    onRemove={handleSnippetRemoved}
+                  />
                 ))}
-              </ul>
+              </div>
             ) : (
-              <p>No snippets found</p>
+              <div className={styles.emptyState}>
+                <p>No snippets in this project yet.</p>
+                <Link to="/snippets" className={styles.addSnippetsLink}>
+                  Go to snippets to add some →
+                </Link>
+              </div>
             )}
           </div>
         </div>

@@ -2,12 +2,38 @@ import type { Snippet } from "../../../shared/types/snippet";
 import { useState, useRef, useEffect, useMemo } from "react";
 import styles from "./Snippet.module.css";
 import { useSnippets } from "../../../shared/hooks/useSnippets";
+import { useNavigate } from "react-router-dom";
 import Popup from "../../organisms/Popup/Popup";
+import ProjectTags from "../ProjectTags/ProjectTags";
+import ProjectSelector from "../ProjectSelector/ProjectSelector";
+import hljs from "highlight.js";
+import { getLanguageByValue } from "../../../shared/constants/languages";
+import { useSnippetExpand } from "../../../shared/contexts/SnippetExpandContext";
 
 const SnippetCard = ({ snippet }: { snippet: Snippet }) => {
   const { deleteSnippet } = useSnippets();
-  const [showCode, setShowCode] = useState(false);
+  const navigate = useNavigate();
+  
+  // Try to get context, fallback to default values if not available
+  let expandedSnippets: Set<number>, setExpandedSnippets: (s: Set<number>) => void;
+  try {
+    const context = useSnippetExpand();
+    expandedSnippets = context.expandedSnippets;
+    setExpandedSnippets = context.setExpandedSnippets;
+  } catch {
+    // Fallback when context is not available
+    expandedSnippets = new Set();
+    setExpandedSnippets = () => {};
+  }
+  
   const [showPopup, setShowPopup] = useState(false);
+  const [showProjectSelector, setShowProjectSelector] = useState(false);
+  
+  // Use context for expand state, fallback to local state if context not available
+  const isExpandedFromContext = expandedSnippets.has(snippet.id);
+  const [localShowCode, setLocalShowCode] = useState(false);
+  
+  const showCode = expandedSnippets.size > 0 ? isExpandedFromContext : localShowCode;
 
   // refs to the <pre>, the numbers column and wrapper so we can animate/collapse smoothly
   const codeRef = useRef<HTMLPreElement | null>(null);
@@ -19,15 +45,52 @@ const SnippetCard = ({ snippet }: { snippet: Snippet }) => {
   // so the content can grow naturally and not be clipped by CSS max-height.
   const [maxHeight, setMaxHeight] = useState<string>("0px");
 
-  // precompute lines for line numbers
-  const lines = useMemo(() => {
+  // precompute lines for line numbers and highlighted code
+  const { lines, highlightedCode, languageInfo } = useMemo(() => {
     // Ensure we always show at least one line
-    const arr = snippet.code ? snippet.code.split("\n") : [""];
-    return arr;
-  }, [snippet.code]);
+    const codeLines = snippet.code ? snippet.code.split("\n") : [""];
+    
+    // Get language information
+    const langInfo = getLanguageByValue(snippet.language);
+    
+    // Highlight the code
+    let highlighted: string;
+    if (snippet.language && snippet.code) {
+      try {
+        // Try to highlight with specified language
+        highlighted = hljs.highlight(snippet.code, { language: snippet.language.toLowerCase() }).value;
+      } catch {
+        // Fallback to auto-detection if language is not recognized
+        highlighted = hljs.highlightAuto(snippet.code).value;
+      }
+    } else if (snippet.code) {
+      // Auto-detect language if no language specified
+      highlighted = hljs.highlightAuto(snippet.code).value;
+    } else {
+      highlighted = "";
+    }
+    
+    return { 
+      lines: codeLines, 
+      highlightedCode: highlighted, 
+      languageInfo: langInfo || { value: snippet.language, label: snippet.language }
+    };
+  }, [snippet.code, snippet.language]);
 
   const handleShowCode = () => {
-    setShowCode((s) => !s);
+    if (expandedSnippets.size > 0) {
+      // Using context - update the set
+      const newExpanded = new Set(expandedSnippets);
+      if (isExpandedFromContext) {
+        newExpanded.delete(snippet.id);
+      } else {
+        newExpanded.add(snippet.id);
+      }
+      setExpandedSnippets(newExpanded);
+    } else {
+      // Using local state
+      setLocalShowCode(!localShowCode);
+    }
   };
 
   useEffect(() => {
@@ -84,6 +147,15 @@ const SnippetCard = ({ snippet }: { snippet: Snippet }) => {
     deleteSnippet(snippet.id);
   };
 
+  const handleEdit = () => {
+    // Navigate to edit page
+    navigate(`/edit-snippet/${snippet.id}`);
+  };
+
+  const handleManageProjects = () => {
+    setShowProjectSelector(!showProjectSelector);
+  };
+
   const handleCopy = () => {
     navigator.clipboard.writeText(snippet.code);
     setShowPopup(true);
@@ -93,18 +165,80 @@ const SnippetCard = ({ snippet }: { snippet: Snippet }) => {
     setShowPopup(false);
   };
 
+  // Get language color for the badge
+  const getLanguageColor = (lang: string) => {
+    const colors: Record<string, string> = {
+      javascript: '#f7df1e',
+      typescript: '#007acc',
+      python: '#3776ab',
+      java: '#ed8b00',
+      csharp: '#239120',
+      cpp: '#00599c',
+      c: '#a8b9cc',
+      go: '#00add8',
+      rust: '#000000',
+      php: '#777bb4',
+      ruby: '#cc342d',
+      swift: '#fa7343',
+      kotlin: '#7f52ff',
+      html: '#e34f26',
+      css: '#1572b6',
+      json: '#000000',
+      sql: '#336791',
+      bash: '#4eaa25',
+      default: 'var(--primary)'
+    };
+    return colors[lang.toLowerCase()] || colors.default;
+  };
+
   return (
     <div className={styles.snippet}>
       {showPopup && (
-        <Popup content="📋 copied to clipboard" togglePopup={togglePopup} />
+        <Popup content="Copied to clipboard" togglePopup={togglePopup} />
       )}
       <div className={styles.snippetHeader}>
-        <h3 className={styles.snippetTitle}>{snippet.title}</h3>
-        <div>
+        <div className={styles.snippetTitleSection}>
+          <h3 className={styles.snippetTitle}>{snippet.title}</h3>
+          <div className={styles.snippetMeta}>
+            <span 
+              className={styles.languageBadge}
+              style={{ 
+                '--badge-color': getLanguageColor(snippet.language),
+                backgroundColor: getLanguageColor(snippet.language) + '20',
+                color: getLanguageColor(snippet.language),
+                border: `1px solid ${getLanguageColor(snippet.language)}40`
+              } as React.CSSProperties}
+            >
+              {languageInfo.label}
+            </span>
+            <span className={styles.codeLength}>
+              {snippet.code.split('\n').length} lines
+            </span>
+          </div>
+          <ProjectTags snippetId={snippet.id} />
+        </div>
+        <div className={styles.snippetActions}>
+          <button
+            type="button"
+            className={styles.snippetButton}
+            onClick={handleManageProjects}
+            title="Manage projects"
+          >
+            Projects
+          </button>
+          <button
+            type="button"
+            className={styles.snippetButton}
+            onClick={handleEdit}
+            title="Edit snippet"
+          >
+            Edit
+          </button>
           <button
             type="button"
             className={styles.snippetButton}
             onClick={handleCopy}
+            title="Copy code to clipboard"
           >
             Copy
           </button>
@@ -114,13 +248,15 @@ const SnippetCard = ({ snippet }: { snippet: Snippet }) => {
             onClick={handleShowCode}
             aria-expanded={showCode}
             aria-controls={`snippet-code-${snippet.id}`}
+            title={showCode ? "Hide code" : "Show code"}
           >
             {showCode ? "Hide" : "Show"}
           </button>
           <button
             type="button"
-            className={styles.snippetButton}
+            className={`${styles.snippetButton} ${styles.deleteButton}`}
             onClick={handleDelete}
+            title="Delete snippet"
           >
             Delete
           </button>
@@ -202,11 +338,20 @@ const SnippetCard = ({ snippet }: { snippet: Snippet }) => {
               flex: 1,
             }}
             aria-hidden={!showCode}
-          >
-            {snippet.code}
-          </pre>
+            dangerouslySetInnerHTML={{ __html: highlightedCode }}
+          />
         </div>
       </div>
+      
+      {/* Project Selector */}
+      {showProjectSelector && (
+        <div className={styles.projectSelectorWrapper}>
+          <ProjectSelector 
+            snippetId={snippet.id} 
+            onClose={() => setShowProjectSelector(false)} 
+          />
+        </div>
+      )}
     </div>
   );
 };

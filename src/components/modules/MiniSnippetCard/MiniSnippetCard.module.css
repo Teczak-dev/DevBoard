@@ -1,0 +1,213 @@
+.miniSnippet {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  transition: all 160ms ease;
+}
+
+.miniSnippet:hover {
+  border-color: var(--primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+
+.titleSection {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.languageBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.lineCount {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  padding: 3px 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 160ms ease;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.actionButton:hover {
+  background: var(--hover-bg);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.removeAction {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.removeAction:hover {
+  background: rgba(221, 31, 31, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px;
+  font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+.previewLine {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2px;
+  min-height: 1.4em;
+}
+
+.lineNumber {
+  width: 20px;
+  min-width: 20px;
+  color: var(--muted);
+  text-align: right;
+  margin-right: 8px;
+  font-size: 0.7rem;
+  user-select: none;
+}
+
+.lineCode {
+  flex: 1;
+  color: var(--text);
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.moreIndicator {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+}
+
+.error {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--danger);
+  font-size: 0.85rem;
+  padding: 8px;
+  background: rgba(221, 31, 31, 0.1);
+  border-radius: 4px;
+}
+
+.removeButton {
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.removeButton:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .actions {
+    justify-content: flex-end;
+    gap: 3px;
+  }
+  
+  .actionButton {
+    padding: 4px 6px;
+    font-size: 0.65rem;
+    flex: 1;
+    min-width: 50px;
+  }
+  
+  .preview {
+    font-size: 0.7rem;
+  }
+  
+  .lineNumber {
+    width: 16px;
+    min-width: 16px;
+    font-size: 0.65rem;
+  }
+}
+
+/* For very small screens, stack buttons in 2 rows */
+@media (max-width: 480px) {
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
+  
+  .actionButton {
+    font-size: 0.6rem;
+    padding: 3px 4px;
+  }
+}

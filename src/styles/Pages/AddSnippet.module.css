@@ -66,13 +66,20 @@ h1 {
     max-width: 820px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 18px;
+    gap: 18px;
+    padding: 24px;
     border-radius: 12px;
     background-color: var(--surface);
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
     box-sizing: border-box;
+}
+
+/* Field wrapper for consistent spacing */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 /* Labels for inputs */
@@ -81,7 +88,74 @@ label {
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--muted);
-    margin: 6px 0 6px 4px;
+    margin-bottom: 6px;
+}
+
+/* Form actions container */
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+/* Form buttons */
+.form button,
+.cancelButton {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        transform 80ms ease,
+        opacity 160ms ease,
+        border-color 160ms ease;
+    min-width: 140px;
+}
+
+.form button {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.cancelButton {
+    background-color: transparent;
+    color: var(--text);
+    border-color: var(--border);
+}
+
+.form button:hover:not(:disabled),
+.form button:focus:not(:disabled) {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.cancelButton:hover,
+.cancelButton:focus {
+    background-color: var(--hover-bg);
+    border-color: var(--muted);
+}
+
+.form button:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.cancelButton:active {
+    transform: translateY(1px);
+}
+
+.form button:disabled,
+.buttonDisabled {
+    background-color: var(--muted) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
 }
 
 /* Validation / error messages */
@@ -91,31 +165,8 @@ label {
     margin: 4px 0 0 4px;
 }
 
-/* Form actions (buttons placed inside form) */
-.form button {
-    margin-top: 12px;
-    align-self: flex-end;
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: none;
-    background-color: var(--primary);
-    color: #ffffff;
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-        background-color 160ms ease,
-        transform 80ms ease;
-}
-.form button:hover,
-.form button:focus {
-    background-color: var(--accent);
-}
-.form button:active {
-    transform: translateY(1px);
-}
-
 /* Utility: make an input/element full width inside the form */
-.inputfull {
+.inputFull {
     width: 100%;
     box-sizing: border-box;
 }
@@ -127,31 +178,47 @@ label {
     align-items: center;
 }
 
-/* Field spacing: keep consistent vertical rhythm */
-.field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
 /* Small responsive tweaks */
 @media (max-width: 720px) {
-    .form {
-        padding: 14px;
-        gap: 10px;
+    .container {
+        padding: 20px;
     }
+    
+    .form {
+        padding: 18px;
+        gap: 16px;
+    }
+    
     h1 {
         font-size: 1.4rem;
     }
+    
     .description {
         font-size: 0.95rem;
     }
+    
     .backLink {
         padding: 7px 12px;
+    }
+    
+    .formActions {
+        flex-direction: column;
+    }
+    
+    .form button {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+/* Medium screen adjustments */
+@media (max-width: 960px) {
+    .form {
+        max-width: 700px;
     }
 }
 
 /* Accessibility notes:
-   - Focus styles for interactive elements are provided globally (Css variables).
+   - Focus styles for interactive elements are provided globally (CSS variables).
    - When adding custom interactive controls here, ensure they are keyboard-focusable
      and visible on focus. Prefer :focus-visible for keyboard-only outlines. */
