@@ -1,20 +1,25 @@
 import React from "react";
 import styles from "../styles/Pages/AddSnippet.module.css";
 import { TextField } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSnippets } from "../shared/hooks/useSnippets";
-import { useAddSnippet } from "../shared/hooks/useAddSnippet";
+import { useEditSnippet } from "../shared/hooks/useEditSnippet";
 import LanguageSelect from "../components/modules/LanguageSelect/LanguageSelect";
 import CodeEditor from "../components/modules/CodeEditor/CodeEditor";
 
 /**
- * AddSnippetPage
+ * EditSnippetPage
  *
- * Page wrapper that reuses the AddSnippet module and shared UI primitives.
+ * Page for editing existing snippets
  */
-const AddSnippetPage: React.FC = () => {
-  const { addSnippet } = useSnippets();
+const EditSnippetPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const { snippets, updateSnippet } = useSnippets();
   const navigate = useNavigate();
+  
+  const snippetId = id ? parseInt(id, 10) : null;
+  const snippet = snippets.find(s => s.id === snippetId);
+
   const {
     snippetTitle,
     snippetLanguage,
@@ -23,19 +28,34 @@ const AddSnippetPage: React.FC = () => {
     handleSnippetTitleChange,
     handleSnippetLanguageChange,
     handleSnippetCodeChange,
-    handleAddSnippet,
-  } = useAddSnippet(addSnippet, navigate);
+    handleUpdateSnippet,
+    isLoading
+  } = useEditSnippet(snippet, updateSnippet, navigate);
+
+  if (!snippetId || !snippet) {
+    return (
+      <div className={styles.container}>
+        <h1>Snippet Not Found</h1>
+        <Link className={styles.backLink} to="/snippets">
+          Go back to Snippets
+        </Link>
+        <p className={styles.description}>
+          The snippet you're trying to edit doesn't exist or has been deleted.
+        </p>
+      </div>
+    );
+  }
 
   const isFormValid = snippetTitle.trim().length > 0 && snippetCode.trim().length > 0;
 
   return (
     <div className={styles.container}>
-      <h1>Add Snippet</h1>
+      <h1>Edit Snippet</h1>
       <Link className={styles.backLink} to="/snippets">
         Go back to Snippets
       </Link>
       <p className={styles.description}>
-        Create a new snippet by filling out the form below. Use Ctrl+S (Cmd+S) to save quickly.
+        Edit your snippet below. Use Ctrl+S (Cmd+S) to save quickly.
       </p>
       <form className={styles.form}>
         <div className={styles.field}>
@@ -81,12 +101,19 @@ const AddSnippetPage: React.FC = () => {
 
         <div className={styles.formActions}>
           <button 
-            type="submit" 
-            onClick={(e) => handleAddSnippet(e)}
-            disabled={!isFormValid}
-            className={!isFormValid ? styles.buttonDisabled : ''}
+            type="button" 
+            onClick={() => navigate("/snippets")}
+            className={styles.cancelButton}
           >
-            Create Snippet
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            onClick={(e) => handleUpdateSnippet(e)}
+            disabled={!isFormValid || isLoading}
+            className={!isFormValid || isLoading ? styles.buttonDisabled : ''}
+          >
+            {isLoading ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
       </form>
@@ -94,4 +121,4 @@ const AddSnippetPage: React.FC = () => {
   );
 };
 
-export default AddSnippetPage;
+export default EditSnippetPage;

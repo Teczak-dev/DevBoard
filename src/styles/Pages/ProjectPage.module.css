@@ -160,10 +160,20 @@
 }
 
 /* Headings inside panels */
-.panel h2 {
+.panel h2,
+.tasks h2 {
     margin: 0 0 8px 0;
     font-size: 1.1rem;
     color: var(--text);
+}
+
+.snippets h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: var(--text);
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
 }
 
 /* Item lists inside panels */
@@ -198,6 +208,55 @@
 .muted {
     color: var(--muted);
     font-size: 0.95rem;
+}
+
+/* Snippets specific styles */
+.snippetsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+}
+
+.emptyState p {
+    margin: 0 0 12px 0;
+    font-size: 0.9rem;
+}
+
+.addSnippetsLink {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: var(--primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 160ms ease;
+}
+
+.addSnippetsLink:hover {
+    background-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments for snippets */
+@media (max-width: 768px) {
+    .emptyState {
+        padding: 16px;
+    }
+    
+    .addSnippetsLink {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
 }
 
 /* Accessibility helpers:

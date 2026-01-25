@@ -20,6 +20,7 @@
         padding: 16px;
     }
 }
+
 .button {
     background-color: var(--primary);
     color: #f1f1f1;
@@ -32,4 +33,129 @@
 
 .button:hover {
     background-color: var(--accent);
+}
+
+/* New styles for filters and controls */
+.actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filters {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filterControl {
+    min-width: 150px;
+}
+
+.clearFilter {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 160ms ease;
+    font-size: 0.85rem;
+}
+
+.clearFilter:hover {
+    background: var(--hover-bg);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.expandControls {
+    display: flex;
+    gap: 8px;
+}
+
+.expandButton {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 160ms ease;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.expandButton:hover {
+    background: var(--hover-bg);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.noResults {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+}
+
+.noResults p {
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .filters {
+        justify-content: stretch;
+        gap: 8px;
+    }
+    
+    .filterControl {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .expandControls {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .expandControls {
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .expandButton {
+        width: 100%;
+    }
+    
+    .filters {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .filterControl {
+        width: 100%;
+    }
 }

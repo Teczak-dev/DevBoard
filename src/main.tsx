@@ -6,6 +6,7 @@ import { ThemeProvider } from "./context/ThemeProvider";
 import { ProjectsProvider } from "./context/ProjectsProvider";
 import { SnippetsProvider } from "./context/SnippetsProvider";
 import "./index.css";
+import "highlight.js/styles/github-dark.css";
 import { isTauri } from "./shared/utils/isTauri";
 
 /**
