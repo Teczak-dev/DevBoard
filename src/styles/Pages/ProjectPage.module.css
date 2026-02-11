@@ -98,13 +98,29 @@
 
 /* Primary content area */
 .details {
-    width: 100%;
-    max-width: 1200px;
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-    margin-top: 44px; /* give space for top controls */
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 44px; /* give space for top controls */
+  box-sizing: border-box;
+}
+
+/* Full width task section */
+.tasksSection {
+  width: 100%;
+  min-height: 500px;
+}
+
+/* Bottom row: snippets and markdown side-by-side */
+.bottomRow {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 /* First row: tasks and snippets side-by-side with equal widths */
@@ -132,31 +148,184 @@
 /* Tasks / snippets common layout */
 .tasks,
 .snippets {
-    /* Two equal columns that share available width (accounts for gap) */
-    flex: 1 1 calc(50% - 10px);
-    min-width: 280px;
-    max-height: 60vh;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background-color: var(--surface);
-    border-radius: 10px;
-    padding: 12px;
-    box-sizing: border-box;
+  /* Two equal columns that share available width (accounts for gap) */
+  flex: 1 1 calc(50% - 12px);
+  min-width: 300px;
+  max-height: 70vh;
+  overflow: visible; /* Let TaskBoard handle its own scrolling */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: transparent; /* Let TaskBoard handle its own background */
+  border-radius: 10px;
+  padding: 0; /* Remove padding to let TaskBoard handle its layout */
+  box-sizing: border-box;
 }
 
-/* Markdown should span the full width equal to the two panels combined */
+.snippets {
+  /* Restore original styling for snippets */
+  background-color: var(--surface) !important;
+  padding: 16px !important;
+  overflow-y: auto !important;
+  max-height: 60vh !important;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+/* Markdown section */
 .markdown {
-    /* Take the full content width from .details so it equals tasks + snippets combined */
-    width: 100%;
-    box-sizing: border-box;
-    background-color: var(--surface);
-    border-radius: 10px;
-    padding: 18px;
-    max-height: 60vh;
-    overflow-y: auto;
-    display: block;
+  /* Take the full content width from .details so it equals tasks + snippets combined */
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--surface);
+  border-radius: 10px;
+  padding: 18px;
+  max-height: 60vh;
+  overflow: hidden; /* Changed from auto to hidden to let inner components handle scroll */
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+}
+
+.markdownHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.markdownHeader h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.markdownView {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--surface);
+  color: var(--text);
+  line-height: 1.6;
+  font-family: var(--font-family);
+}
+
+.emptyMarkdown {
+  color: var(--text-secondary);
+  font-style: italic;
+  text-align: center;
+  padding: 40px 20px;
+  margin: 0;
+}
+
+/* Markdown content styling in view mode */
+.markdownView h1,
+.markdownView h2,
+.markdownView h3,
+.markdownView h4,
+.markdownView h5,
+.markdownView h6 {
+  margin: 1.5em 0 0.5em 0;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.markdownView h1:first-child,
+.markdownView h2:first-child,
+.markdownView h3:first-child,
+.markdownView h4:first-child,
+.markdownView h5:first-child,
+.markdownView h6:first-child {
+  margin-top: 0;
+}
+
+.markdownView p {
+  margin: 0 0 1em 0;
+  color: var(--text);
+}
+
+.markdownView code {
+  background: var(--surface-secondary);
+  color: var(--text);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+}
+
+.markdownView pre {
+  background: var(--surface-secondary);
+  color: var(--text);
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1em 0;
+  border: 1px solid var(--border);
+}
+
+.markdownView pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.markdownView blockquote {
+  margin: 1em 0;
+  padding: 0 1em;
+  border-left: 4px solid var(--primary);
+  color: var(--text-secondary);
+  font-style: italic;
+  background: var(--surface-secondary);
+  border-radius: 4px;
+}
+
+.markdownView ul,
+.markdownView ol {
+  margin: 0 0 1em 0;
+  padding-left: 2em;
+}
+
+.markdownView li {
+  margin: 0.5em 0;
+  color: var(--text);
+}
+
+.markdownView table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  border: 1px solid var(--border);
+}
+
+.markdownView th,
+.markdownView td {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.markdownView th {
+  background: var(--surface-secondary);
+  font-weight: 600;
+}
+
+.markdownView a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.markdownView a:hover {
+  text-decoration: underline;
+}
+
+.markdownView hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 2em 0;
 }
 
 /* Headings inside panels */

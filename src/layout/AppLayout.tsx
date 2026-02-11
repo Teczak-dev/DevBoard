@@ -9,7 +9,7 @@ const AppLayout: React.FC = () => {
         <Outlet />
       </main>
       <footer>
-        <p>&copy; 2025 DevBoard</p>
+        <p>&copy; 2026 DevBoard</p>
       </footer>
     </div>
   );

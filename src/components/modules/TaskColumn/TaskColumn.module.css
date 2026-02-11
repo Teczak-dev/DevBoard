@@ -1,0 +1,150 @@
+.columnContainer {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  min-height: 400px;
+  background-color: var(--surface);
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  padding: 16px;
+  margin: 0; /* Remove margin to prevent clipping */
+  box-shadow: var(--shadow);
+  flex-shrink: 0; /* Prevent columns from shrinking */
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.columnTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+}
+
+.taskCount {
+  background-color: var(--accent-light);
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.tasksContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  border-radius: 8px;
+  padding: 8px;
+  margin: -8px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.canDrop {
+  background-color: var(--accent-light);
+  border: 2px dashed var(--accent);
+}
+
+.dropActive {
+  background-color: var(--primary-light);
+  border: 2px solid var(--primary);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  text-align: center;
+  opacity: 0.6;
+}
+
+.emptyText {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.emptyHint {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+.dropIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--primary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .columnContainer {
+    width: 280px;
+    margin: 0 4px;
+    padding: 12px;
+  }
+  
+  .columnTitle {
+    font-size: 1rem;
+  }
+  
+  .tasksContainer {
+    min-height: 150px;
+  }
+  
+  .emptyState {
+    height: 120px;
+  }
+  
+  .emptyText {
+    font-size: 0.9rem;
+  }
+  
+  .emptyHint {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .columnContainer {
+    width: 100%;
+    margin: 8px 0;
+  }
+}

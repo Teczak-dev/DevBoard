@@ -8,6 +8,32 @@
 
 ---
 
+## System Requirements
+
+### Operating System
+- **Windows:** Windows 10 (version 1903 or later) / Windows 11
+- **macOS:** macOS 10.15 Catalina or later
+- **Linux:** Ubuntu 18.04 LTS, Debian 10, Fedora 32, or equivalent distributions with glibc 2.28+
+
+### Processor
+- **Minimum:** 64-bit processor (x64/AMD64)
+- **Recommended:** Dual-core 2.0 GHz or better
+- **Supports:** Intel, AMD, Apple Silicon (M1/M2)
+
+### Memory (RAM)
+- **Minimum:** 4 GB RAM
+- **Recommended:** 8 GB RAM or more
+
+### Disk Space
+- **Installation:** ~200 MB
+- **Recommended:** 1 GB free space for user data
+
+### Additional Requirements
+- **Internet connection:** Not required (application works locally)
+- **WebView2:** Automatically installed on Windows (if missing)
+
+---
+
 ## Windows Installation
 
 1. Download the `.msi` file

@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import styles from "../styles/Pages/ProjectPage.module.css";
 import { useProjects } from "../shared/hooks/useProjects";
 import { useSnippetProjectRelations } from "../shared/hooks/useSnippetProjectRelations";
+import { useFragments } from "../shared/hooks/useFragments";
+import { useTheme } from "../shared/hooks/useTheme";
 import type { Project } from "../shared/types/project";
 import ProjectInfo from "../components/modules/ProjectInfo/ProjectInfo";
 import EditProjectInfo from "../components/modules/EditProjectInfo/EditProjectInfo";
 import MiniSnippetCard from "../components/modules/MiniSnippetCard/MiniSnippetCard";
+import TaskBoard from "../components/modules/TaskBoard/TaskBoard";
+import { MarkdownEditor } from "../components/modules/MarkdownEditor/MarkdownEditor";
 
 const ProjectPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const { projects, updateProject } = useProjects();
   const { getSnippetsForProject } = useSnippetProjectRelations();
+  const { fragments } = useFragments();
+  const { theme } = useTheme();
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingMarkdown, setIsEditingMarkdown] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   
   if (!id) {
@@ -64,6 +73,21 @@ const ProjectPage: React.FC = () => {
     setIsEditing(!isEditing);
   };
 
+  /**
+   * Handle markdown content changes and save to project
+   */
+  const handleMarkdownChange = async (newContent: string) => {
+    const updated: Project = { ...item, markdown: newContent };
+    await updateProject(item.id, updated);
+  };
+
+  /**
+   * Toggle markdown editing mode
+   */
+  const toggleMarkdownEdit = () => {
+    setIsEditingMarkdown(!isEditingMarkdown);
+  };
+
   // Render project details
   return (
     <div className={styles.container}>
@@ -87,19 +111,17 @@ const ProjectPage: React.FC = () => {
         <ProjectInfo item={item} />
       )}
       <div className={styles.details}>
-        <div className={styles.firstRow}>
-          <div className={styles.tasks}>
-            <h2>Tasks</h2>
-            {Array.isArray(item.tasks) && item.tasks.length > 0 ? (
-              <ul>
-                {item.tasks.map((task) => (
-                  <li key={task}>{task}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>No tasks found</p>
-            )}
-          </div>
+        {/* Full width task board */}
+        <div className={styles.tasksSection}>
+          <TaskBoard 
+            projectId={projectId}
+            title="Project Tasks"
+            showAddButton={true}
+          />
+        </div>
+        
+        {/* Bottom row: snippets and markdown side by side */}
+        <div className={styles.bottomRow}>
           <div className={styles.snippets}>
             <h2>Snippets</h2>
             {snippetsInProject.length > 0 ? (
@@ -122,14 +144,42 @@ const ProjectPage: React.FC = () => {
               </div>
             )}
           </div>
-        </div>
-        <div className={styles.markdown}>
-          <h2>Markdown</h2>
-          {item.markdown ? (
-            <div dangerouslySetInnerHTML={{ __html: item.markdown }} />
-          ) : (
-            <p>No markdown found</p>
-          )}
+          <div className={styles.markdown}>
+            <div className={styles.markdownHeader}>
+              <h2>Markdown</h2>
+              <button
+                className={styles.button}
+                onClick={toggleMarkdownEdit}
+                title={isEditingMarkdown ? "View mode" : "Edit mode"}
+              >
+                {isEditingMarkdown ? "View" : "Edit"}
+              </button>
+            </div>
+            
+            {isEditingMarkdown ? (
+              <MarkdownEditor
+                content={item.markdown || ""}
+                onChange={handleMarkdownChange}
+                height="500px"
+                placeholder="Start writing your project documentation..."
+                fragments={fragments}
+                showFragments={true}
+                autoSaveDelay={2000}
+                onAutoSave={handleMarkdownChange}
+                theme={theme}
+              />
+            ) : (
+              <div className={styles.markdownView}>
+                {item.markdown ? (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{item.markdown}</ReactMarkdown>
+                ) : (
+                  <p className={styles.emptyMarkdown}>
+                    No markdown content yet. Click "Edit" to start writing.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

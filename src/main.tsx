@@ -5,6 +5,8 @@ import AppRoutes from "./routes";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { ProjectsProvider } from "./context/ProjectsProvider";
 import { SnippetsProvider } from "./context/SnippetsProvider";
+import { TodosProvider } from "./context/TodosProvider";
+import { FragmentsProvider } from "./context/FragmentsProvider";
 import "./index.css";
 import "highlight.js/styles/github-dark.css";
 import { isTauri } from "./shared/utils/isTauri";
@@ -20,6 +22,9 @@ import { isTauri } from "./shared/utils/isTauri";
  * - Router for navigation between pages
  * - ThemeProvider for theme management
  * - ProjectsProvider for project state management
+ * - SnippetsProvider for code snippets management  
+ * - TodosProvider for task/todo management
+ * - FragmentsProvider for markdown fragments management
  *
  * The application automatically detects whether it's running in Tauri or browser
  * environment and configures functionality accordingly.
@@ -63,7 +68,11 @@ function renderApp(): void {
         <ThemeProvider>
           <ProjectsProvider>
             <SnippetsProvider>
-              <AppRoutes />
+              <TodosProvider>
+                <FragmentsProvider>
+                  <AppRoutes />
+                </FragmentsProvider>
+              </TodosProvider>
             </SnippetsProvider>
           </ProjectsProvider>
         </ThemeProvider>

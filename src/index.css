@@ -18,6 +18,7 @@
 :root {
     /* Typography / rendering */
     --font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    --font-family-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
     font-family: var(--font-family);
     color-scheme: light dark;
     font-synthesis: none;
@@ -28,63 +29,87 @@
     /* Theme variables (defaults to dark-friendly values) */
     --bg: #0f1215;
     --surface: #1d1f25;
+    --surface-secondary: #252930;
+    --surface-hover: #2a2f38;
     --text: rgba(255, 255, 255, 0.92);
+    --text-secondary: rgba(255, 255, 255, 0.65);
     --muted: rgba(255, 255, 255, 0.7);
     --border: rgba(255, 255, 255, 0.12);
-    --primary: #4da3ff;
-    --primary-soft: rgba(77, 163, 255, 0.08);
-    --accent: #21f;
+    --border-hover: rgba(255, 255, 255, 0.2);
+    --primary: #1a4faa;
+    --primary-hover: #1e4a9c;
+    --primary-text: #ffffff;
+    --primary-soft: rgba(26, 79, 170, 0.08);
+    --accent: #2876d4;
     --header-bg: transparent;
     --header-border: var(--border);
     --hover-bg: rgba(255, 255, 255, 0.04);
     --shadow: 0 2px 8px rgba(2, 6, 23, 0.6);
     --image-svg: 1;
     --disabled-border: rgba(255, 255, 255, 0.06);
-    --danger: #a11;
+    --danger: #ff6b6b;
+    --danger-text: #ffffff;
     --danger-hover: #dd1f1f;
     --danger-active: #dd1f1f;
+    --highlight: rgba(255, 235, 59, 0.3);
 }
 
 /* Light theme overrides */
 :root[data-theme="light"] {
     --bg: #ffffff;
     --surface: #f6f7f9;
+    --surface-secondary: #e5e7eb;
+    --surface-hover: #d1d5db;
     --text: #111827;
+    --text-secondary: rgba(17, 24, 39, 0.7);
     --muted: rgba(17, 24, 39, 0.7);
     --border: rgba(17, 24, 39, 0.08);
-    --primary: #5d498f;
-    --primary-soft: rgba(103, 78, 167, 0.08);
-    --accent: #674ea7;
+    --border-hover: rgba(17, 24, 39, 0.15);
+    --primary: #4a3a75;
+    --primary-hover: #3d2f5f;
+    --primary-text: #ffffff;
+    --primary-soft: rgba(74, 58, 117, 0.08);
+    --accent: #553d89;
     --header-bg: transparent;
     --header-border: rgba(17, 24, 39, 0.08);
     --hover-bg: rgba(2, 6, 23, 0.04);
     --shadow: 0 2px 8px rgba(2, 6, 23, 0.06);
     --image-svg: 0;
     --disabled-border: rgba(17, 24, 39, 0.06);
-    --danger: #a11;
-    --danger-hover: #dd1f1f;
-    --danger-active: #dd1f1f;
+    --danger: #ef4444;
+    --danger-text: #ffffff;
+    --danger-hover: #dc2626;
+    --danger-active: #dc2626;
+    --highlight: rgba(255, 235, 59, 0.5);
 }
 
 /* Dark theme explicit override (in case data-theme uses 'dark') */
 :root[data-theme="dark"] {
     --bg: #0f1215;
     --surface: #1a1f25;
+    --surface-secondary: #252930;
+    --surface-hover: #2a2f38;
     --text: rgba(255, 255, 255, 0.92);
+    --text-secondary: rgba(255, 255, 255, 0.65);
     --muted: rgba(255, 255, 255, 0.7);
     --border: rgba(255, 255, 255, 0.12);
-    --primary: #21a;
-    --primary-soft: rgba(33, 34, 255, 0.08);
-    --accent: #21f;
+    --border-hover: rgba(255, 255, 255, 0.2);
+    --primary: #1a4faa;
+    --primary-hover: #1e4a9c;
+    --primary-text: #ffffff;
+    --primary-soft: rgba(26, 79, 170, 0.08);
+    --accent: #2876d4;
     --header-bg: transparent;
     --header-border: var(--border);
     --hover-bg: rgba(255, 255, 255, 0.08);
     --shadow: 0 2px 8px rgba(2, 6, 23, 0.6);
     --image-svg: 1;
     --disabled-border: rgba(255, 255, 255, 0.06);
-    --danger: #a11;
+    --danger: #ff6b6b;
+    --danger-text: #ffffff;
     --danger-hover: #dd1f1f;
     --danger-active: #dd1f1f;
+    --highlight: rgba(255, 235, 59, 0.3);
 }
 
 /* =========================

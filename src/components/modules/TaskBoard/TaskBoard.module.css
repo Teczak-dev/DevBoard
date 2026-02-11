@@ -1,0 +1,200 @@
+.taskBoard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 16px 24px 16px; /* Increased bottom padding for scroll clearance */
+  background-color: var(--background);
+  min-height: 500px;
+}
+
+.boardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box;
+  padding-right: 16px; /* Add right padding for better spacing */
+}
+
+.boardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+}
+
+.addTaskBtn {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-right: 16px; /* Add right margin for better spacing */
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap; /* Prevent text wrapping */
+  flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.addTaskBtn:hover {
+  background-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.boardStats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 12px 0;
+  overflow-x: auto;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  padding: 8px 12px;
+  background-color: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.statNumber {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.columnsContainer {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  overflow-x: auto;
+  padding: 0 8px 20px 8px; /* Increased bottom padding for scrollbar clearance */
+  margin-bottom: 8px; /* Add margin to separate from page edge */
+  min-height: 400px;
+}
+
+/* Scrollbar styling for columns container */
+.columnsContainer::-webkit-scrollbar {
+  height: 6px;
+}
+
+.columnsContainer::-webkit-scrollbar-track {
+  background: var(--surface);
+  border-radius: 3px;
+}
+
+.columnsContainer::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.columnsContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Empty state when no tasks */
+.emptyBoard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.emptyBoardText {
+  font-size: 1.125rem;
+  margin-bottom: 8px;
+}
+
+.emptyBoardHint {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .taskBoard {
+    padding: 12px;
+  }
+  
+  .boardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .boardTitle {
+    font-size: 1.375rem;
+  }
+  
+  .addTaskBtn {
+    align-self: stretch;
+    justify-content: center;
+    width: 100%; /* Ensure full width on mobile */
+  }
+  
+  .boardStats {
+    justify-content: space-between;
+    gap: 8px;
+  }
+  
+  .statItem {
+    flex: 1;
+    min-width: 60px;
+    padding: 6px 8px;
+  }
+  
+  .statNumber {
+    font-size: 1.125rem;
+  }
+  
+  .statLabel {
+    font-size: 0.7rem;
+  }
+  
+  .columnsContainer {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .taskBoard {
+    padding: 8px;
+  }
+  
+  .boardTitle {
+    font-size: 1.25rem;
+  }
+  
+  .boardStats {
+    flex-wrap: wrap;
+  }
+  
+  .statItem {
+    min-width: calc(50% - 4px);
+  }
+}
