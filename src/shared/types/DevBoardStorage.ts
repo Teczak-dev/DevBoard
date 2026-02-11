@@ -1,6 +1,7 @@
 import type { Project } from "./project";
 import type { Snippet } from "./snippet";
 import type { Todo } from "./todo";
+import type { MarkdownFragment } from "./fragment";
 
 /**
  * DevBoard - Main application data type
@@ -11,7 +12,8 @@ import type { Todo } from "./todo";
  * Structure:
  * - projects: list of all user projects
  * - snippets: reusable code fragments
- * - todos: tasks to be completed in projects
+ * - todos: enhanced tasks with status, colors, and project association
+ * - fragments: markdown fragments for the editor
  * - settings: application settings (theme, preferences)
  * - meta: metadata about version and data structure
  */
@@ -22,8 +24,11 @@ export type DevBoardStore = {
   /** Reusable code fragments */
   snippets: Snippet[];
 
-  /** List of tasks to complete */
+  /** Enhanced tasks with status tracking and project association */
   todos: Todo[];
+
+  /** Markdown editor fragments (built-in and custom) */
+  fragments: MarkdownFragment[];
 
   /** Application settings */
   settings: {

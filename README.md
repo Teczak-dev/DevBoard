@@ -210,8 +210,6 @@ Build instructions and distribution guide
 ### 🩺 [Troubleshooting](/docs/TROUBLESHOOTING.md)
 Solutions for common issues
 
----
-
 ## 🔧 Troubleshooting
 
 ### Common Issues
@@ -250,24 +248,30 @@ npm run dev:tauri
 ## 🗺️ Roadmap
 
 ### ✅ Completed
+**In 2025**
 - [x] Cross-platform desktop application
 - [x] Local-first storage system
 - [x] Project management core
-- [x] Basic snippet  manager
+- [x] Basic snippet manager
 
-### 🚧 Current (v0.1.0)
-- [ ] Complete snippet manager
-- [ ] Enhanced markdown editor
-- [ ] Tasks system improvements
-- [ ] PDF export functionality
+**In 2026**
+- [x] Complete snippet manager
+- [x] Enhanced markdown editor
+- [x] Task system improvements
 
-### 📋 Planned (v0.2.0+)
+### 🚧 Current (v0.2.0+)
 - [ ] Backup/restore features
 - [ ] Theme customization
 - [ ] Plugin system
 - [ ] GitHub integration (read-only)
 
----
+### 📋 Planned (v1.0.0+)
+- [ ] In-app tabs
+- [ ] Advanced search for projects/snippets/tasks
+- [ ] Mobile app with desktop app sync
+- [ ] Export settings
+- [ ] Complete app customization
+- [ ] AI suggestions
 
 ## 🤝 Contributing
 
@@ -283,6 +287,35 @@ We welcome contributions! Here's how to get started:
 ### Development Guidelines
 - Follow TypeScript best practices
 - Add tests for new features
+- Update documentation as needed
+- Ensure cross-platform compatibility
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Mikołaj Sobczak**  
+- GitHub: [@Teczak-dev](https://github.com/Teczak-dev)
+- Project: [DevBoard](https://github.com/Teczak-dev/DevBoard)
+
+---
+
+## 🌟 Support
+
+- ⭐ **Star this repository** if it helps you
+- 🐛 **Report issues** via GitHub Issues
+- 💬 **Join discussions** in GitHub Discussions
+- 📖 **Read the docs** at [/docs](/docs)
+
+---
+
+**Ready to organize your development workflow? Download DevBoard today! 🚀**- Add tests for new features
 - Update documentation as needed
 - Ensure cross-platform compatibility
 

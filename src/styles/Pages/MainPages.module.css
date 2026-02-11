@@ -44,3 +44,10 @@
         font-size: 1rem;
     }
 }
+
+.content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px 24px 16px; /* Add bottom padding for scroll clearance */
+}

@@ -36,6 +36,9 @@ export const DEVBOARD_INITIAL_STATE: DevBoardStore = {
   /** List of tasks - initially empty */
   todos: [],
 
+  /** Markdown fragments - initially empty (will be populated by FragmentsProvider) */
+  fragments: [],
+
   /** Application settings */
   settings: {
     /** Default theme: dark (better for developers) */
