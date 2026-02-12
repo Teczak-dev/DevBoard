@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useDrop } from "react-dnd";
+import { Droppable } from "@hello-pangea/dnd";
 import styles from "./TaskColumn.module.css";
 import TaskCard from "../TaskCard/TaskCard";
 import type { Todo, TaskStatus } from "../../../shared/types/todo";
-import { useTodos } from "../../../shared/hooks/useTodos";
 
 interface TaskColumnProps {
   status: TaskStatus;
@@ -21,7 +20,7 @@ interface TaskColumnProps {
  * - Scrollable task list
  * - Visual feedback during drag operations
  * 
- * Uses React DnD for drop functionality to accept dragged tasks.
+ * Uses @hello-pangea/dnd for drop functionality to accept dragged tasks.
  * Automatically updates task status when dropped.
  */
 const TaskColumn: React.FC<TaskColumnProps> = ({
@@ -30,30 +29,6 @@ const TaskColumn: React.FC<TaskColumnProps> = ({
   tasks,
   onEditTask,
 }) => {
-  const { updateTaskStatus } = useTodos();
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  // React DnD drop functionality
-  const [{ isOver, canDrop }, drop] = useDrop(() => ({
-    accept: "task",
-    drop: async (item: { id: number; status: TaskStatus; originalTask?: Todo }) => {
-      // Only update if status is different
-      if (item.status !== status && !isUpdating) {
-        setIsUpdating(true);
-        try {
-          await updateTaskStatus(item.id, status);
-        } catch (error) {
-          console.error("Error updating task status:", error);
-        } finally {
-          setIsUpdating(false);
-        }
-      }
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-      canDrop: !!monitor.canDrop() && !isUpdating,
-    }),
-  }), [status, updateTaskStatus, isUpdating]);
 
   /**
    * Get column status indicator color
@@ -88,42 +63,50 @@ const TaskColumn: React.FC<TaskColumnProps> = ({
       </div>
 
       {/* Drop zone and tasks list */}
-      <div
-        ref={drop as any}
-        className={`${styles.tasksContainer} ${
-          isOver && canDrop ? styles.dropActive : ""
-        } ${canDrop ? styles.canDrop : ""}`}
-      >
-        {/* Empty state */}
-        {tasks.length === 0 && (
-          <div className={styles.emptyState}>
-            <p className={styles.emptyText}>
-              {status === "todo" && "No tasks yet"}
-              {status === "inProgress" && "No tasks in progress"}
-              {status === "done" && "No completed tasks"}
-            </p>
-            <p className={styles.emptyHint}>
-              Drag tasks here or create new ones
-            </p>
+      <Droppable droppableId={status}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className={`${styles.tasksContainer} ${
+              snapshot.isDraggingOver ? styles.dropActive : ""
+            }`}
+          >
+            {/* Empty state */}
+            {tasks.length === 0 && (
+              <div className={styles.emptyState}>
+                <p className={styles.emptyText}>
+                  {status === "todo" && "No tasks yet"}
+                  {status === "inProgress" && "No tasks in progress"}
+                  {status === "done" && "No completed tasks"}
+                </p>
+                <p className={styles.emptyHint}>
+                  Drag tasks here or create new ones
+                </p>
+              </div>
+            )}
+
+            {/* Tasks list */}
+            {tasks.map((task, index) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                index={index}
+                onEdit={onEditTask}
+              />
+            ))}
+
+            {provided.placeholder}
+
+            {/* Drop indicator */}
+            {snapshot.isDraggingOver && (
+              <div className={styles.dropIndicator}>
+                Drop task here
+              </div>
+            )}
           </div>
         )}
-
-        {/* Tasks list */}
-        {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onEdit={onEditTask}
-          />
-        ))}
-
-        {/* Drop indicator */}
-        {isOver && canDrop && (
-          <div className={styles.dropIndicator}>
-            Drop task here
-          </div>
-        )}
-      </div>
+      </Droppable>
     </div>
   );
 };
