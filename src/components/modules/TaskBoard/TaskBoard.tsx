@@ -1,27 +1,10 @@
 import React, { useState, useMemo } from "react";
-import { DragDropContext } from "@hello-pangea/dnd";
+import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import styles from "./TaskBoard.module.css";
 import TaskColumn from "../TaskColumn/TaskColumn";
 import TaskForm from "../TaskForm/TaskForm";
 import type { Todo, TaskStatus } from "../../../shared/types/todo";
 import { useTodos } from "../../../shared/hooks/useTodos";
-
-// Define DropResult interface based on @hello-pangea/dnd structure
-interface DropResult {
-  draggableId: string;
-  type: string;
-  source: {
-    index: number;
-    droppableId: string;
-  };
-  reason: 'DROP' | 'CANCEL';
-  mode: string;
-  destination: {
-    droppableId: string;
-    index: number;
-  } | null;
-  combine: null;
-}
 
 interface TaskBoardProps {
   /** Optional project ID to filter tasks */
