@@ -1,11 +1,27 @@
 import React, { useState, useMemo } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { DragDropContext } from "@hello-pangea/dnd";
 import styles from "./TaskBoard.module.css";
 import TaskColumn from "../TaskColumn/TaskColumn";
 import TaskForm from "../TaskForm/TaskForm";
 import type { Todo, TaskStatus } from "../../../shared/types/todo";
 import { useTodos } from "../../../shared/hooks/useTodos";
+
+// Define DropResult interface based on @hello-pangea/dnd structure
+interface DropResult {
+  draggableId: string;
+  type: string;
+  source: {
+    index: number;
+    droppableId: string;
+  };
+  reason: 'DROP' | 'CANCEL';
+  mode: string;
+  destination: {
+    droppableId: string;
+    index: number;
+  } | null;
+  combine: null;
+}
 
 interface TaskBoardProps {
   /** Optional project ID to filter tasks */
@@ -26,7 +42,7 @@ interface TaskBoardProps {
  * - Project-specific or global task filtering
  * - Responsive design
  * 
- * Uses React DnD for drag & drop functionality.
+ * Uses @hello-pangea/dnd for drag & drop functionality.
  * Integrates with TodosContext for state management.
  */
 const TaskBoard: React.FC<TaskBoardProps> = ({
@@ -34,7 +50,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({
   showAddButton = true,
   title = "Tasks",
 }) => {
-  const { todos, getTodosForProject } = useTodos();
+  const { todos, getTodosForProject, updateTaskStatus } = useTodos();
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [editingTask, setEditingTask] = useState<Todo | null>(null);
 
@@ -75,6 +91,34 @@ const TaskBoard: React.FC<TaskBoardProps> = ({
 
     return organized;
   }, [filteredTasks]);
+
+  /**
+   * Handle drag end event
+   */
+  const handleOnDragEnd = async (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+
+    // If no destination, do nothing
+    if (!destination) return;
+
+    // If dropped in the same position, do nothing
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    // Extract task ID from draggableId (format: "task-{id}")
+    const taskId = parseInt(draggableId.replace("task-", ""));
+    const newStatus = destination.droppableId as TaskStatus;
+
+    try {
+      await updateTaskStatus(taskId, newStatus);
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
+  };
 
   /**
    * Handle opening task form for new task
@@ -126,7 +170,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({
   ];
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DragDropContext onDragEnd={handleOnDragEnd}>
       <div className={styles.taskBoard}>
         {/* Board header */}
         <div className={styles.boardHeader}>
@@ -192,7 +236,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({
           />
         )}
       </div>
-    </DndProvider>
+    </DragDropContext>
   );
 };
 
